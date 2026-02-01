@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أذكار - BOB Reminder</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+
+
+<style>
+*{box-sizing:border-box}
+body{
+   font-size:18px;   /* 👈 ده السر */
+  line-height:1.9;  /* مريح للقراءة */
+  margin:0;
+  font-family:'Amiri',serif;
+  background:gold;
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+  overflow-x:hidden;
+   touch-action: pan-y;
+}
+
+/* الخلفية */
+.page-background{
+  position:fixed;
+  inset:0;
+  background:url("background01.jpg") center/cover no-repeat;
+  z-index:0;
+}
+
+.page-background::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.3);
+}
+
+.content{
+  position:relative;
+  z-index:2;
+}
+
+/* المحتوى */
+.content{
+  max-width:720px;
+  margin:auto;
+}
+
+/* العنوان */
+h2{
+  text-align:center;
+  font-size:1.7em;
+  background:linear-gradient(90deg,#FFD700,#FFB300,#FFA500);
+  background-size:200%;
+   background-clip: text;        
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gold 3s linear infinite;
+  margin-bottom:25px;
+}
+
+@keyframes gold{
+  to{background-position:200%}
+}
+
+/* بوكس الذكر */
+.zekr-box{
+  background:rgba(34,34,34,.9);
+  border-radius:22px;
+  padding:18px;
+  margin:15px 0;
+  display:flex;
+  gap:15px;
+  align-items:center;
+  cursor:pointer;
+  box-shadow:0 0 10px gold;
+  position:relative;
+  overflow:hidden;
+}
+
+.zekr-text{
+  flex:1;
+  text-align:right;
+  font-size:1.3em;
+}
+
+.circle-btn{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:3px solid gold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:gold;
+  font-weight:bold;
+}
+
+.circle-btn.completed{
+  background:green;
+  color:#fff;
+}
+
+/* الشرارات */
+.sparkle{
+  position:fixed;
+  pointer-events:none;
+  animation:sparkle .7s forwards;
+}
+@keyframes sparkle{
+  from{opacity:1;transform:scale(0)}
+  to{opacity:0;transform:translate(var(--x),var(--y)) scale(1)}
+}
+
+/* الهلال والورود */
+.float{
+  position:fixed;
+  font-size:1.6em;
+  pointer-events:none;
+  opacity:.8;
+}
+
+a{
+  color:gold;
+  display:block;
+  text-align:center;
+  margin-top:25px;
+  text-decoration:none;
+}
+
+@media(max-width:480px){
+  .zekr-text{font-size:1.1em;}
+  .circle-btn{width:40px;height:40px;font-size:0.9em;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-background"></div>
+
+<div class="content">
+<h2>نور القلب — أذكار وأدعية</h2>
+<div id="zekr-list"></div>
+<a href="index.html">العودة للرئيسية</a>
+</div>
+
+<script>
+const azkarData=[
+  {text:"أَسْتَغْفِرُ الله",count:100},
+  {text:"سبحان الله",count:33},
+  {text:"الحمد لله",count:33},
+  {text:"الله أكبر",count:33},
+  {text:"لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير",count:10},
+  {text:"لا حول ولا قوة إلا بالله",count:10},
+  {text:"اللهم اغفر لي",count:10},
+  {text:"اللهم اهدني",count:10},
+  {text:"اللهم اجعلني من التوابين",count:10},
+  {text:"اللهم تقبل مني",count:10},
+  {text:"ربنا آتنا في الدنيا حسنة",count:10},
+  {text:"ربنا اغفر لي ولوالديّ",count:10},
+  {text:"اللهم ارزقني رضوانك",count:10},
+  {text:"اللهم ارزقني الجنة",count:10},
+  {text:"اللهم أعني على ذكرك وشكرك وحسن عبادتك",count:10},
+  {text:"اللهم إني أسألك الثبات",count:10},
+  {text:"اللهم اجعلني من عبادك الصالحين",count:10},
+  {text:"اللهم صلِّ على نبينا محمد ﷺ",count:100},
+  {text:"اللهم بارك لي في رزقي",count:10},
+  {text:"اللهم انصر الإسلام والمسلمين",count:10},
+  {text:"اللهم اجعل القرآن ربيع قلبي",count:10},
+  {text:"اللهم ثبّت قلبي على دينك",count:10},
+  {text:"اللهم أعوذ بك من الفتن ما ظهر منها وما بطن",count:10},
+  {text:"اللهم ارحمني واغفر لي",count:10},
+  {text:"اللهم جدد الإيمان في قلبي",count:10}
+];
+
+const container=document.getElementById("zekr-list");
+
+azkarData.forEach(item=>{
+  let count=item.count;
+  const box=document.createElement("div");
+  box.className="zekr-box";
+
+  const btn=document.createElement("div");
+  btn.className="circle-btn";
+  btn.textContent=count;
+
+  const text=document.createElement("div");
+  text.className="zekr-text";
+  text.textContent=item.text;
+
+  box.append(btn,text);
+  container.appendChild(box);
+
+  box.onclick=e=>{
+    if(count>0){
+      count--;
+      btn.textContent=count;
+      if(count===0) btn.classList.add("completed");
+
+      for(let i=0;i<6;i++){
+        const s=document.createElement("span");
+        s.className="sparkle";
+        s.textContent="✨";
+        s.style.left=e.clientX+"px";
+        s.style.top=e.clientY+"px";
+        s.style.setProperty("--x",(Math.random()*120-60)+"px");
+        s.style.setProperty("--y",(Math.random()*120-60)+"px");
+        document.body.appendChild(s);
+        s.onanimationend=()=>s.remove();
+      }
+    }
+  }
+});
+
+/* الهلال والورود المتحركة */
+const icons=["🌙","🏵️","🏵️","🌙","🏵️"];
+const items=[];
+icons.forEach(icon=>{
+  const el=document.createElement("div");
+  el.className="float";
+  el.textContent=icon;
+  el.x=Math.random()*window.innerWidth;
+  el.y=Math.random()*window.innerHeight;
+  el.vx=(Math.random()*2-1)*0.7;
+  el.vy=(Math.random()*2-1)*0.7;
+  document.body.appendChild(el);
+  items.push(el);
+});
+
+setInterval(()=>{
+  items.forEach(el=>{
+    el.x+=el.vx;
+    el.y+=el.vy;
+    if(el.x<0||el.x>window.innerWidth-30) el.vx*=-1;
+    if(el.y<0||el.y>window.innerHeight-30) el.vy*=-1;
+    el.style.left=el.x+"px";
+    el.style.top=el.y+"px";
+  });
+},25);
+</script>
+<!-- ضمن نفس الكود السابق -->
+<script>
+// كل شيء سابق (الأدعية + الهلال + الورود) يبقى زي ما هو
+
+// إضافة شرارات تتحرك مع الماوس
+const sparkleContainer=document.createElement("div");
+sparkleContainer.style.position="fixed";
+sparkleContainer.style.top=0;
+sparkleContainer.style.left=0;
+sparkleContainer.style.width="100%";
+sparkleContainer.style.height="100%";
+sparkleContainer.style.pointerEvents="none";
+sparkleContainer.style.zIndex=5;
+document.body.appendChild(sparkleContainer);
+
+function createSparkle(x,y){
+  const sparkle=document.createElement("span");
+  sparkle.className="sparkle";
+  sparkle.innerText="✨";
+  sparkle.style.left=x+"px";
+  sparkle.style.top=y+"px";
+  sparkle.style.setProperty("--x",(Math.random()*50-25)+"px");
+  sparkle.style.setProperty("--y",(Math.random()*50-25)+"px");
+  sparkleContainer.appendChild(sparkle);
+  sparkle.addEventListener("animationend",()=> sparkle.remove());
+}
+
+// مع الماوس
+document.addEventListener("mousemove", e=>{
+  createSparkle(e.clientX, e.clientY);
+});
+
+// مع اللمس (touch)
+document.addEventListener("touchmove", e=>{
+  for(let i=0;i<e.touches.length;i++){
+    createSparkle(e.touches[i].clientX, e.touches[i].clientY);
+  }
+});
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("Service Worker Failed:", err));
+}
+</script>
+<script src="pullRefresh.js"></script>
+
+</body>
+</html>

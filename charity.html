@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صدقة جارية - BOB Reminder</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-size:18px;   /* 👈 ده السر */
+  line-height:1.9;  /* مريح للقراءة */
+  font-family:'Amiri',serif;
+background:gold;
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+  overflow-x:hidden;
+   touch-action: pan-y;
+}
+
+/* الخلفية */
+.page-background{
+  position:fixed;
+  inset:0;
+  background:url("background00.jpg") center/cover no-repeat;
+  filter:brightness(.7);
+  z-index:-1;
+}
+
+/* المحتوى */
+.content{
+  max-width:720px;
+  margin:auto;
+  text-align:center;
+}
+
+/* العنوان */
+h2{
+  font-size:2.3em;
+  margin-bottom:30px;
+  background:linear-gradient(90deg,#FFD700,#FFB300,#FFA500);
+  background-size:200%;
+   background-clip: text;        
+ -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gold 3s linear infinite;
+}
+
+@keyframes gold{
+  to{background-position:200%}
+}
+
+/* كروت الصدقة */
+.card{
+  background:rgba(34,34,34,.9);
+  border-radius:22px;
+  padding:20px;
+  margin:15px 0;
+  box-shadow:0 0 12px gold;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 25px gold;
+}
+
+.card strong{
+  display:block;
+  font-size:1.4em;
+  color:gold;
+  margin-bottom:10px;
+}
+
+.card p{
+  color:#ddd;
+  font-size:1.15em;
+  margin:0;
+}
+
+/* زر الرجوع */
+a{
+  color:gold;
+  display:block;
+  text-align:center;
+  margin-top:30px;
+  text-decoration:none;
+  font-size:1.1em;
+}
+
+/* الشرارات */
+.sparkle{
+  position:fixed;
+  pointer-events:none;
+  animation:sparkle .7s forwards;
+}
+
+@keyframes sparkle{
+  from{opacity:1;transform:scale(0)}
+  to{opacity:0;transform:translate(var(--x),var(--y)) scale(1)}
+}
+
+/* الهلال والورود */
+.float{
+  position:fixed;
+  font-size:1.6em;
+  pointer-events:none;
+  opacity:.8;
+}
+
+@media(max-width:480px){
+  h2{font-size:1.8em}
+  .card strong{font-size:1.2em}
+  .card p{font-size:1.05em}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-background"></div>
+
+<div class="content">
+<h2>أفكار للصدقة الجارية</h2>
+
+<div class="card">
+  <strong>توزيع الطعام</strong>
+  <p>تقديم وجبات بسيطة للفقراء والمحتاجين</p>
+</div>
+
+<div class="card">
+  <strong>صدقة العلم</strong>
+  <p>شراء كتب تعليمية أو دعم مدارس ومكتبات</p>
+</div>
+
+<div class="card">
+  <strong>المساعدة الرقمية</strong>
+  <p>نشر الأدعية والمحتوى الإسلامي النافع عبر الإنترنت</p>
+</div>
+
+<div class="card">
+  <strong>زرع الخير</strong>
+  <p>المساهمة في بناء مسجد أو زرع الأشجار</p>
+</div>
+
+<div class="card">
+  <strong>صدقة الماء</strong>
+  <p>توفير مياه نظيفة للمحتاجين ونشر الحياة</p>
+</div>
+
+<a href="index.html">العودة للرئيسية</a>
+</div>
+
+<script>
+/* الهلال والورود المتحركة */
+const icons=["🌙","🏵️","🏵️","🌙","🏵️"];
+const items=[];
+
+icons.forEach(icon=>{
+  const el=document.createElement("div");
+  el.className="float";
+  el.textContent=icon;
+  el.x=Math.random()*window.innerWidth;
+  el.y=Math.random()*window.innerHeight;
+  el.vx=(Math.random()*2-1)*0.7;
+  el.vy=(Math.random()*2-1)*0.7;
+  document.body.appendChild(el);
+  items.push(el);
+});
+
+setInterval(()=>{
+  items.forEach(el=>{
+    el.x+=el.vx;
+    el.y+=el.vy;
+    if(el.x<0||el.x>window.innerWidth-30) el.vx*=-1;
+    if(el.y<0||el.y>window.innerHeight-30) el.vy*=-1;
+    el.style.left=el.x+"px";
+    el.style.top=el.y+"px";
+  });
+},25);
+
+/* الشرارات مع الماوس واللمس */
+function createSparkle(x,y){
+  const s=document.createElement("span");
+  s.className="sparkle";
+  s.textContent="✨";
+  s.style.left=x+"px";
+  s.style.top=y+"px";
+  s.style.setProperty("--x",(Math.random()*80-40)+"px");
+  s.style.setProperty("--y",(Math.random()*80-40)+"px");
+  document.body.appendChild(s);
+  s.onanimationend=()=>s.remove();
+}
+
+document.addEventListener("mousemove",e=>{
+  createSparkle(e.clientX,e.clientY);
+});
+
+document.addEventListener("touchmove",e=>{
+  for(let i=0;i<e.touches.length;i++){
+    createSparkle(e.touches[i].clientX,e.touches[i].clientY);
+  }
+});
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("Service Worker Failed:", err));
+}
+</script>
+<script src="pullRefresh.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>شهر شعبان</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+
+<style>
+/* ... كل الـ CSS كما هو ... */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {  font-size:18px;   /* 👈 ده السر */
+  line-height:1.9;  /* مريح للقراءة */font-family:'Cairo',sans-serif; background:gold; color:#fff; text-align:center;position: relative; overflow:hidden; touch-action: pan-y;} 
+.page-bg { position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('shaaban-bg.jpg'); background-size:cover; background-position:center; filter:brightness(0.85) contrast(1.1); z-index:1; }
+.header { font-family:'Playfair Display', serif; font-size:2.4em; color:#fbff06; margin-top:20px; position:relative; z-index:10; animation:glow 2s infinite alternate; padding:0 10px; word-wrap:break-word; }
+@keyframes glow { 0% { text-shadow:0 0 5px gold,0 0 20px #FFB300; } 100% { text-shadow:0 0 15px gold,0 0 40px #FFB300; } }
+.dua-btn, .share-btn { margin-top:10px; padding:8px 12px; border:none; border-radius:8px; font-size:1em; cursor:pointer; transition:0.2s; }
+.dua-btn { background:#fffb00; color:#000; box-shadow:0 0 10px#fffb00; }
+.dua-btn:hover { transform:scale(1.05); box-shadow:0 0 20px #fffb00; }
+.share-btn { background:#fffb00; color:#000; box-shadow:0 0 10px #fffb00; }
+.share-btn:hover { transform:scale(1.05); box-shadow:0 0 20px#fffb00; }
+.flower, .moon { position:absolute; font-size:1.6em; color:#FFD700; z-index:5; pointer-events:none; }
+.spark-container { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:20; }
+.back-btn { position:fixed; top:15px; right:15px; z-index:15; background:rgba(255,215,0,0.85); color:#000; border:none; border-radius:50%; width:50px; height:50px; font-size:1.5em; cursor:pointer; box-shadow:0 0 15px gold; transition:transform 0.2s, box-shadow 0.2s; }
+.back-btn:hover { transform:scale(1.1); box-shadow:0 0 25px #fffb00; }
+.content-box { position:relative; z-index:10; width:90%; max-width:600px; margin:15px auto; padding:15px 20px; border-radius:18px; background:rgba(0,0,0,0.55); box-shadow:0 0 18px #FFD70055; backdrop-filter:blur(4px); animation:pulse 3s infinite alternate; word-wrap:break-word; }
+@keyframes pulse { 0% { box-shadow:0 0 10px #FFD700; } 100% { box-shadow:0 0 30px #FFB300; } }
+.section h2 { color:#FFD700; margin-bottom:8px; font-size:1.2em; }
+.section p, .section ul { color:#fff; line-height:1.7; font-size:1em; }
+.section ul { list-style:none; padding-left:0; text-align:right; }
+@media (max-width:480px) {
+  .header { font-size:2em; }
+  .content-box { padding:12px 15px; }
+  .section h2 { font-size:1em; }
+  .section p, .section ul { font-size:0.9em; }
+  .back-btn, .dua-btn, .share-btn { width:auto; height:auto; font-size:1em; padding:6px 10px; }
+/* تأثير الضغط - يكبر مؤقتًا أثناء الضغط فقط */
+.dua-btn:active {
+  transform: scale(1.12);
+  box-shadow: 0 0 25px #fffb00;
+}
+}
+</style>
+</head>
+<head>
+  ...
+  <style>
+    body {
+      background-image: url('shaaban-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+
+<body>
+<div class="page-bg"></div>
+<button class="back-btn" onclick="history.back()">←</button>
+
+<div class="header">✨ شهر شعبان المبارك ✨</div>
+
+<div class="content-box section">
+<h2>فضل شهر شعبان</h2>
+<p>شهر شعبان،  ثابت عن النبي ﷺ أنه كان يُكثر الصيام فيه
+
+قالت عائشة رضي الله عنها:
+
+«كان رسول الله ﷺ يصوم شعبان كله إلا قليلًا» (صحيح) 
+، فيه ترفع الأعمال إلى الله، والإكثار من الصوم والدعاء مستحب.</p>
+</div>
+
+<div class="content-box section">
+<h2>أعمال شهر شعبان</h2>
+<ul>
+  <li>الصوم المستحب، فقد كان النبي ﷺ يصومه إلا قليلًا.</li>
+  <li>الإكثار من ذكر الله ، لأن الأعمال تُرفع في هذا الشهر.</li>
+  <li>الصلاة على النبي ﷺ .</li>
+  <li>الاستغفار والتوبة النصوح.</li>
+  <li>قراءة القرآن والتدبر فيه.</li>
+  <li>الاستعداد لشهر رمضان بالطاعات والتزود من الخير.</li>
+  <li>الصدقة ومساعدة المحتاجين.</li>
+</ul>
+
+
+<div class="content-box section">
+<h2>دعاء اليوم</h2>
+<p id="duaDisplay">اللهم بارك لنا في شعبان وبلغنا رمضان</p>
+<button class="dua-btn" onclick="getDua()">تغيير الدعاء 🔄</button>
+<button class="share-btn" onclick="shareDua()">مشاركة الدعاء 📤</button>
+</div>
+
+<div id="flowerContainer"></div>
+<div id="moonContainer"></div>
+<div class="spark-container" id="spark"></div>
+
+<script>
+// 🌹 الورود + الهلال
+const flowerContainer=document.getElementById('flowerContainer');
+const moonContainer=document.getElementById('moonContainer');
+const screenW=window.innerWidth;
+const screenH=window.innerHeight;
+
+function createFloating(el,emoji){
+  for(let i=0;i<7;i++){
+    const item=document.createElement('div');
+    item.className=el;
+    item.innerText=emoji;
+    item.style.top=Math.random()*screenH*0.9+'px';
+    item.style.left=Math.random()*screenW*0.9+'px';
+    item.vx=(Math.random()*2-1)*1.2;
+    item.vy=(Math.random()*2-1)*1.2;
+    if(el==='flower') flowerContainer.appendChild(item);
+    else moonContainer.appendChild(item);
+  }
+}
+createFloating('flower','🏵️');
+createFloating('moon','🌙');
+
+setInterval(()=>{ 
+  document.querySelectorAll('.flower,.moon').forEach(el=>{
+    let x=parseFloat(el.style.left)+el.vx;
+    let y=parseFloat(el.style.top)+el.vy;
+    if(x<0||x>screenW-20) el.vx*=-1;
+    if(y<0||y>screenH-20) el.vy*=-1;
+    el.style.left=Math.max(0,Math.min(screenW-20,x))+'px';
+    el.style.top=Math.max(0,Math.min(screenH-20,y))+'px';
+  });
+},50);
+
+// ⚡ الشرار خلف الماوس
+const spark = document.getElementById('spark');
+const rect = spark.getBoundingClientRect();
+
+function addSpark(x, y) {
+  const s = document.createElement('div');
+  s.style.position = 'absolute';
+  s.style.left = (x - rect.left) + 'px';
+  s.style.top = (y - rect.top) + 'px';
+  s.style.width = '6px';
+  s.style.height = '6px';
+  s.style.background = 'gold';
+  s.style.borderRadius = '50%';
+  s.style.boxShadow = '0 0 8px gold,0 0 15px #FFB300';
+  spark.appendChild(s);
+
+  let life = 0;
+  const timer = setInterval(() => {
+    s.style.opacity = 1 - life / 25;
+    s.style.top = (parseFloat(s.style.top) - 1) + 'px';
+    life++;
+    if (life > 25) {
+      clearInterval(timer);
+      spark.removeChild(s);
+    }
+  }, 16);
+}
+
+document.addEventListener('mousemove', e => addSpark(e.clientX, e.clientY));
+document.addEventListener('touchmove', e => {
+  for (let t of e.touches) addSpark(t.clientX, t.clientY);
+});
+
+// تغيير الدعاء عشوائي
+const shaabanDuas = [
+  "اللهم بارك لنا في شعبان وبلغنا رمضان",
+  "اللهم اجعلنا من الذين يغتنمون أيام شعبان بالخير",
+  "اللهم اجعل صيامنا وقيامنا في شعبان مقبولاً",
+  "اللهم اجعلنا من الذين يكثرون من الاستغفار في شعبان",
+  "اللهم اجعلنا من الذين يحافظون على صلاتهم في شعبان",
+  "اللهم اجعلنا من الذين يصلون على النبي ﷺ في شعبان",
+  "اللهم اجعلنا من الذين يستعدون لرمضان بالطاعات",
+  "اللهم اجعلنا من الذين يزدادون قرباً منك في شعبان",
+  "اللهم اجعلنا من الذين يرفعون أيديهم بالدعاء في شعبان",
+  "اللهم اجعلنا من الذين يفرحون بقدوم رمضان",
+  "اللهم اجعلنا من الذين يغتنمون الليالي المباركة",
+  "اللهم اجعلنا من الذين يبتعدون عن المعاصي",
+  "اللهم اجعلنا من الذين يصلحون أعمالهم",
+  "اللهم اجعلنا من الذين يكثرون من الصدقات",
+  "اللهم اجعلنا من الذين يحبون الخير للناس",
+  "اللهم اجعلنا من الذين يكثرون من ذكر الله",
+  "اللهم اجعلنا من الذين يستغفرون قبل الفجر",
+  "اللهم اجعلنا من الذين يقيمون الليل",
+  "اللهم اجعلنا من الذين يحافظون على القرآن",
+  "اللهم اجعلنا من الذين يحبون العلم والعمل الصالح",
+  "اللهم اجعلنا من الذين يغفرون للآخرين",
+  "اللهم اجعلنا من الذين يفرحون بالتقوى",
+  "اللهم اجعلنا من الذين يصلون على النبي ﷺ",
+  "اللهم اجعلنا من الذين يكثرون من الأعمال الصالحة",
+  "اللهم اجعلنا من الذين يبتعدون عن الغيبة والنميمة",
+  "اللهم اجعلنا من الذين يتواضعون في حياتهم",
+  "اللهم اجعلنا من الذين يحبون السلام",
+  "اللهم اجعلنا من الذين يذكرون الموت",
+  "اللهم اجعلنا من الذين يغتنمون الليالي الطويلة",
+  "اللهم اجعلنا من الذين يصلحون ذات بينهم",
+  "اللهم اجعلنا من الذين يسامحون في شعبان",
+  "اللهم اجعلنا من الذين يعمرون قلوبهم بالخير",
+  "اللهم اجعلنا من الذين يكثرون من ذكر الله",
+  "اللهم اجعلنا من الذين يكثرون من الاستغفار",
+  "اللهم اجعلنا من الذين يصلون في جماعة",
+  "اللهم اجعلنا من الذين يحبون الخير للآخرين",
+  "اللهم اجعلنا من الذين يسعون لرضاك",
+  "اللهم اجعلنا من الذين يتواضعون في حياتهم",
+  "اللهم اجعلنا من الذين يغتنمون الليالي",
+  "اللهم اجعلنا من الذين يكثرون من الصدقات",
+  "اللهم اجعلنا من الذين يحبون القرآن",
+  "اللهم اجعلنا من الذين يصلون على النبي ﷺ",
+  "اللهم اجعلنا من الذين يكثرون من الدعاء",
+  "اللهم اجعلنا من الذين يسامحون بعضهم البعض",
+  "اللهم اجعلنا من الذين يحبون السلام",
+  "اللهم اجعلنا من الذين يستعدون لرمضان بالطاعات",
+  "اللهم اجعلنا من الذين يبتعدون عن المعاصي",
+  "اللهم اجعلنا من الذين يغتنمون كل لحظة",
+  "اللهم اجعلنا من الذين يرفعون أيديهم بالدعاء",
+  "اللهم اجعلنا من الذين يحبون الخير"
+];
+
+// مؤشر لتتبع الدعاء الحالي
+let currentIndex = 0;
+
+// عرض الدعاء الحالي
+function getDua() {
+  const duaDisplay = document.getElementById('duaDisplay');
+  duaDisplay.innerText = shaabanDuas[currentIndex];
+  // زيادة المؤشر مع العودة للبداية عند نهاية القائمة
+  currentIndex = (currentIndex + 1) % shaabanDuas.length;
+}
+
+// عرض أول دعاء عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', getDua);
+
+// زر المشاركة
+function shareDua() {
+  const text = document.getElementById('duaDisplay').innerText;
+  const url = "https://wa.me/?text=" + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+</script>
+<script src="pullRefresh.js"></script>
+
+</body>
+</html>

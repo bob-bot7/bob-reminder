@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أذكار يومية - BOB Reminder</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+
+<body>
+  <!-- الخلفية -->
+  <div class="page-background"></div>
+
+  <!-- المحتوى -->
+  <div class="content">
+    <h2>نور القلب — تذكيرات يومية</h2>
+    <div id="zekr-list"></div>
+
+    <!-- زر إعادة التذكيرات -->
+    <button id="reset-btn">إعادة التذكيرات</button>
+
+    <!-- زر العودة للرئيسية تحت زر الإعادة -->
+    <div style="margin-top: 15px;">
+      <a href="index.html">العودة للرئيسية</a>
+    </div>
+  </div>
+</body>
+
+<style> 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+   font-size:18px;   /* 👈 ده السر */
+  line-height:1.9;  /* مريح للقراءة */
+  height: 100%;
+  font-family: 'Amiri', serif;
+  color: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+   touch-action: pan-y;
+}
+
+body {
+  background:gold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+}
+.page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('reminderr.jpg'); /* صحح المسار حسب مكان الصورة */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.7);
+  z-index: -1;
+}
+
+/* المحتوى */
+.content {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1; /* أهم حاجة عشان يظهر فوق الخلفية */
+  text-align: center;
+}
+
+
+
+/* العنوان */
+h2{
+  font-size:2em;
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+   background-clip: text;    
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:25px;
+  animation: glow 2s infinite alternate;
+}
+@keyframes glow{
+  0% {text-shadow:0 0 5px gold;}
+  50% {text-shadow:0 0 15px gold;}
+  100% {text-shadow:0 0 5px gold;}
+}
+
+/* الكروت */
+.zekr-box{
+  background: rgba(34,34,34,0.85);
+  border-radius:25px;
+  padding:15px 25px;
+  margin:12px 0;
+  width:100%;
+  max-width:650px;
+  font-size:1.3em;
+  line-height:1.5;
+  display:flex;
+  flex-direction: column;
+  cursor:pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5),0 6px 15px rgba(255,215,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.zekr-box:hover, .zekr-box.touch-hover {
+  transform: translateY(-3px);
+  box-shadow:0 12px 25px rgba(255,215,0,0.4),0 8px 20px rgba(255,215,0,0.3);
+}
+
+.zekr-box:active{
+  transform: translateY(2px) scale(0.97) rotateX(1.5deg);
+  box-shadow:0 5px 12px rgba(0,0,0,0.6),0 3px 8px rgba(255,215,0,0.2);
+}
+
+.flash-gold-box{
+  animation: flashBox 0.5s ease-in-out;
+}
+@keyframes flashBox{
+  0%{background: rgba(68,68,68,0.85);}
+  50%{background: linear-gradient(120deg,#333,#FFD700,#333);}
+  100%{background: rgba(34,34,34,0.85);}
+}
+
+.zekr-header{display:flex; align-items:center; gap:15px;}
+.zekr-text{flex:1; text-align:right; margin:0;}
+.circle-btn{
+  width:1.8em; min-width:45px; min-height:45px; height:1.8em;
+  border-radius:50%;
+  background: rgba(255,215,0,0.3);
+  border:3px solid gold;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; pointer-events:none; transition:0.3s; color:gold; font-weight:bold;
+}
+.circle-btn.completed{
+  background: green;
+  border-color:#0a0a0a;
+  color:#fff;
+}
+
+.hint-text{
+  font-size:0.85em;
+  color:#FFD700;
+  margin-top:5px;
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.zekr-box:hover .hint-text, .zekr-box.touch-hover .hint-text{
+  opacity:1;
+}
+
+button#reset-btn{
+  margin-top:20px;
+  padding:10px 25px;
+  font-size:1.1em;
+  border:none;
+  border-radius:20px;
+  background: gold;
+  color:#0a0a0a;
+  cursor:pointer;
+  transition:0.3s;
+}
+button#reset-btn:hover{
+  background:#FFA500;
+  box-shadow:0 0 10px gold,0 0 20px gold;
+}
+
+a{color:gold; margin-top:25px; text-decoration:none; font-size:1.1em;}
+a:hover{text-shadow:0 0 8px gold,0 0 15px gold;}
+
+@media(max-width:480px){
+  .zekr-box{font-size:1.1em; padding:12px 18px;}
+  .zekr-text{font-size:1.1em;}
+  .circle-btn{min-width:40px; min-height:40px;}
+  .hint-text{font-size:0.8em;}
+  button#reset-btn{padding:8px 20px; font-size:1em;}
+}
+</style>
+
+<script>
+const azkarData=[
+  {text:"صليت الصلوات الخمس", hint:"الصلاة في وقتها صلة دائمة بينك وبين الله، فلا تهملها"},
+  {text:"صليت النوافل والسنن وقيام الليل", hint:"ابدأ بما تستطيع، فالمداومة أهم من الكثرة"},
+  {text:"قرأت ورد من القرآن", hint:"حتى وقت قليل يوميًا في القراءة يجمعه الصبر لتصبح عادة ثابتة"},
+  {text:"قرأت حديث اليوم", hint:"اختر حديثًا قصيرًا، وافهم معناه لتصلح به حياتك"},
+  {text:"دعوت لنفسي ولأهلي وللمسلمين والمسلمات وللمؤمنين والمؤمنات", hint:"الدعاء خيط التواصل مع الخالق، فابدأ بإخلاص وتمعن"},
+  {text:"أديت عمل خير أو صدقة", hint:"الخير المستمر أفضل من العمل الكبير لمرة واحدة"},
+  {text:"الحفاظ على الأخلاق الحسنة", hint:"الأدب والابتسامة مفتاح القلوب، فحافظ عليهما دائمًا"},
+  {text:"الصبر عند الغضب", hint:"تحكّم بغضبك قبل أن يتحكم بك، فالهدوء قوة العقل"},
+  {text:"الالتزام بالوقت", hint:"الوقت ثروة لا تُعوض، فخطط له بحكمة واهتم بتنظيمه"}
+];
+
+function checkNewDay(){
+  const today = new Date().toDateString();
+  const lastDay = localStorage.getItem('lastDay');
+  if(lastDay!==today){
+    azkarData.forEach((_,i)=>localStorage.removeItem('zekr-'+i));
+    localStorage.setItem('lastDay',today);
+  }
+}
+
+function displayAzkar(list, containerId){
+  const container=document.getElementById(containerId);
+  container.innerHTML="";
+  list.forEach((zekr,index)=>{
+    const box=document.createElement('div');
+    box.className='zekr-box';
+
+    const header=document.createElement('div');
+    header.className='zekr-header';
+
+    const btn=document.createElement('div');
+    btn.className='circle-btn';
+
+    const p=document.createElement('p');
+    p.textContent=zekr.text;
+    p.className='zekr-text';
+
+    header.appendChild(btn);
+    header.appendChild(p);
+    box.appendChild(header);
+
+    const hint=document.createElement('div');
+    hint.className='hint-text';
+    hint.textContent=zekr.hint;
+    box.appendChild(hint);
+
+    container.appendChild(box);
+
+    const saved = localStorage.getItem('zekr-'+index);
+    if(saved==='done'){ btn.classList.add('completed'); }
+
+    box.onclick=()=>{
+      if(!btn.classList.contains('completed')){
+        btn.classList.add('completed');
+        localStorage.setItem('zekr-'+index,'done');
+      } else {
+        btn.classList.remove('completed');
+        localStorage.removeItem('zekr-'+index);
+      }
+    }
+
+    box.addEventListener('touchstart',()=>{ box.classList.add('touch-hover'); });
+    box.addEventListener('touchend',()=>{ box.classList.remove('touch-hover'); });
+    box.addEventListener('touchcancel',()=>{ box.classList.remove('touch-hover'); });
+  });
+}
+
+document.getElementById('reset-btn').onclick=()=>{
+  azkarData.forEach((_,i)=>localStorage.removeItem('zekr-'+i));
+  displayAzkar(azkarData,'zekr-list');
+}
+
+checkNewDay();
+displayAzkar(azkarData,'zekr-list');
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js')
+  .then(()=>console.log("Service Worker Registered"))
+  .catch(err=>console.log("Service Worker Failed:",err));
+}
+
+function checkNewDay(){
+  const today = new Date().toDateString();
+  const lastDay = localStorage.getItem('lastDay');
+  if(lastDay!==today){
+    azkarData.forEach((_,i)=>localStorage.removeItem('zekr-'+i));
+    localStorage.setItem('lastDay',today);
+  }
+}
+
+function displayAzkar(list, containerId){
+  const container=document.getElementById(containerId);
+  container.innerHTML="";
+  list.forEach((zekr,index)=>{
+    const box=document.createElement('div');
+    box.className='zekr-box';
+
+    const header=document.createElement('div');
+    header.className='zekr-header';
+
+    const btn=document.createElement('div');
+    btn.className='circle-btn';
+
+    const p=document.createElement('p');
+    p.textContent=zekr.text;
+    p.className='zekr-text';
+
+    header.appendChild(btn);
+    header.appendChild(p);
+    box.appendChild(header);
+
+    const hint=document.createElement('div');
+    hint.className='hint-text';
+    hint.textContent=zekr.hint;
+    box.appendChild(hint);
+
+    container.appendChild(box);
+
+    const saved = localStorage.getItem('zekr-'+index);
+    if(saved==='done'){ btn.classList.add('completed'); }
+
+    // اضغط لتغيير اللون
+    box.onclick=()=>{
+      if(!btn.classList.contains('completed')){
+        btn.classList.add('completed');
+        localStorage.setItem('zekr-'+index,'done');
+      } else {
+        btn.classList.remove('completed');
+        localStorage.removeItem('zekr-'+index);
+      }
+    }
+
+    // لمس للهاتف لإظهار hint
+    box.addEventListener('touchstart',()=>{ box.classList.add('touch-hover'); });
+    box.addEventListener('touchend',()=>{ box.classList.remove('touch-hover'); });
+    box.addEventListener('touchcancel',()=>{ box.classList.remove('touch-hover'); });
+  });
+}
+
+document.getElementById('reset-btn').onclick=()=>{
+  azkarData.forEach((_,i)=>localStorage.removeItem('zekr-'+i));
+  displayAzkar(azkarData,'zekr-list');
+}
+
+checkNewDay();
+displayAzkar(azkarData,'zekr-list');
+
+// PWA Service Worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js')
+  .then(()=>console.log("Service Worker Registered"))
+  .catch(err=>console.log("Service Worker Failed:",err));
+}
+</script>
+<script src="pullRefresh.js"></script>
+
+</body>
+</html>

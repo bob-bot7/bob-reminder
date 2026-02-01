@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>أذكار بعد الصلاة - BOB Reminder</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0a0a">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-size:18px;   /* 👈 ده السر */
+  line-height:1.9;  /* مريح للقراءة */
+  font-family:'Amiri',serif;
+background:gold;
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+  overflow-x:hidden;
+  touch-action: manipulation; /* لمنع تكبير الشاشة */
+   touch-action: pan-y;
+  } 
+
+.page-background{
+  position:fixed;
+  inset:0;
+  background:url("background00000.jpg") center/cover no-repeat;
+  filter:brightness(.7);
+  z-index:-1;
+}
+.content{
+  max-width:720px;
+  margin:auto;
+  text-align:center;
+}
+h2{
+  font-size:2.3em;
+  margin-bottom:30px;
+  background:linear-gradient(90deg,#daff08,#eeff00,#ffc400);
+  background-size:200%;
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gold 3s linear infinite;
+}
+@keyframes gold{to{background-position:200%}}
+
+.card{
+  background:rgba(56, 56, 56, 0.9);
+  border-radius:22px;
+  padding:20px;
+  margin:15px 0;
+  box-shadow:0 0 12px gold;
+  transition:.3s;
+}
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 25px gold;
+}
+.card strong{
+  display:block;
+  font-size:1.3em;
+  color:gold;
+  margin-bottom:10px;
+}
+.card p{
+  color:#ddd;
+  font-size:1em;
+  margin:0 0 15px 0;
+  line-height:1.7;
+}
+a{
+  color:gold;
+  display:block;
+  text-align:center;
+  margin-top:30px;
+  text-decoration:none;
+  font-size:1.2em;
+}
+
+/* الزر الدائري */
+.zikr-btn{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  font-size:1em;
+  font-weight:bold;
+  border:none;
+  cursor:pointer;
+  color:#000;
+  background:linear-gradient(90deg,#FFD700,#FFB300);
+  box-shadow:0 0 10px gold;
+  transition:.2s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.zikr-btn:hover{
+  transform:scale(1.1);
+}
+
+/* عند الانتهاء */
+.zikr.done .zikr-btn{
+  background:linear-gradient(90deg,#00ffcc,#00cc99);
+  box-shadow:0 0 20px #00ffcc;
+  color:#000;
+}
+
+/* زر إعادة */
+.reset-btn{
+  font-size:1.5em;
+  background:none;
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+.reset-btn:hover{
+  transform:scale(1.3);
+}
+
+/* حاوية الزر */
+.counter-container{
+  display:flex;
+  justify-content:center; /* زر في الوسط */
+  align-items:center;
+  margin-top:10px;
+  gap:10px; /* مسافة بين الزرين */
+}
+
+@media(max-width:480px){
+  h2{font-size:1.8em}
+  .card strong{font-size:1.15em}
+  .card p{font-size:1.05em}
+  .zikr-btn{width:50px;height:50px;font-size:.9em;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-background"></div>
+
+<div class="content">
+<h2>أذكار بعد الصلاة</h2>
+
+<!-- الاستغفار -->
+<div class="card zikr" data-id="zikr1" data-max="3">
+  <strong>الاستغفار</strong>
+  <p>أستغفر الله</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<!-- التسبيح -->
+<div class="card zikr" data-id="zikr2" data-max="33">
+  <strong>التسبيح</strong>
+  <p>سبحان الله</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 33</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<!-- التحميد -->
+<div class="card zikr" data-id="zikr3" data-max="33">
+  <strong>التحميد</strong>
+  <p>الحمد لله</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 33</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<!-- التكبير -->
+<div class="card zikr" data-id="zikr4" data-max="34">
+  <strong>التكبير</strong>
+  <p>الله أكبر</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 34</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card">
+  <strong>ذكر السلام</strong>
+  <p>اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام</p>
+</div>
+
+<div class="card">
+  <strong>ذكر التوحيد</strong>
+  <p>لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</p>
+</div>
+
+<div class="card">
+  <strong>أذكار</strong>
+  <p> سبحان الله وبحمده، سبحان الله العظيم ،
+
+اللهم لا مانع لما أعطيت، ولا معطي لما منعت، ولا ينفع ذا الجد منك الجد،
+
+ إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، وأعوذ بك من فتنة المحيا والممات، وأعوذ بك من شر فتنة المسيح الدجال،
+
+اللهم اجعل لي نوراً في قلبي، ونوراً في صدري، ونوراً في سمعي، ونوراً في بصري، ونوراً من خلفي، ونوراً من أمامي، ونوراً عن يميني، ونوراً عن شمالي، ونوراً من فوقي، ونوراً من تحتي، واجعل لي نوراً</p>
+</div>
+
+
+
+<!-- آية الكرسي كاملة -->
+<div class="card">
+  <strong>آية الكرسي</strong>
+  <p>
+اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ
+  </p>
+</div>
+
+<!-- المعوذات -->
+<div class="card zikr" data-id="zikr5" data-max="3">
+  <strong>قل هو الله أحد</strong>
+  <p> قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr6" data-max="3">
+  <strong>قل أعوذ برب الفلق</strong>
+  <p> قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِن شَرِّ مَا خَلَقَ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr7" data-max="3">
+  <strong>قل أعوذ برب الناس</strong>
+  <p> قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَٰهِ النَّاسِ، مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<!-- دعاء ختام -->
+<div class="card">
+  <strong>دعاء ختام</strong>
+  <p>اللهم أعني على ذكرك وشكرك وحسن عبادتك</p>
+</div>
+
+
+<a href="index.html">العودة للرئيسية</a>
+</div>
+
+<script>
+// قراءة القيم من localStorage عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.zikr').forEach(card => {
+    const id = card.dataset.id;
+    const btn = card.querySelector('.zikr-btn');
+    const saved = localStorage.getItem(id);
+    if(saved){
+      btn.dataset.count = saved;
+      btn.textContent = `${saved} / ${card.dataset.max}`;
+      if(parseInt(saved) >= parseInt(card.dataset.max)){
+        card.classList.add('done');
+      }
+    }
+  });
+});
+
+function add(btn){
+  const card = btn.closest('.zikr');
+  const max = parseInt(card.dataset.max);
+  let count = parseInt(btn.dataset.count || 0);
+  if(count < max){
+    count++;
+    btn.dataset.count = count;
+    btn.textContent = `${count} / ${max}`;
+    localStorage.setItem(card.dataset.id, count);
+    if(count === max){
+      card.classList.add('done');
+      navigator.vibrate?.(100);
+    }
+  }
+}
+
+function resetZikr(btn){
+  const card = btn.closest('.zikr');
+  const btnZikr = card.querySelector('.zikr-btn');
+  btnZikr.dataset.count = 0;
+  btnZikr.textContent = `0 / ${card.dataset.max}`;
+  card.classList.remove('done');
+  localStorage.setItem(card.dataset.id, 0);
+}
+</script>
+<script src="pullRefresh.js"></script>
+</body>
+</html>

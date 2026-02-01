@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BoB Reminder — Prayer Times</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<body>
+  <!-- الخلفية -->
+  <div class="page-background"></div>
+
+  <!-- المحتوى -->
+  <div class="content">
+    <h2>🕌 Prayer Times — BoB Reminder</h2>
+
+    <div class="switch-container">
+      <span class="switch-label">Use My Location</span>
+      <label class="switch">
+        <input type="checkbox" id="useLocationToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <select id="country" aria-label="Country"></select>
+    <select id="city" aria-label="City"></select>
+
+    <div id="status" class="status" aria-live="polite"></div>
+    <div class="cards" id="prayer-cards" aria-live="polite"></div>
+
+<h2>السنن الرواتب والسنن المؤكدة</h2>
+
+<div style="overflow-x:auto;">
+  <table style="width:100%; border-collapse:collapse; margin-bottom:30px; direction:rtl;">
+    <thead>
+      <tr style="background:linear-gradient(90deg,#FFD700,#FFB300); color:#000;">
+        <th style="padding:10px; border:1px solid gold;">السنة</th>
+        <th style="padding:10px; border:1px solid gold;">عدد الركعات</th>
+        <th style="padding:10px; border:1px solid gold;">ملاحظات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(72,80,76,0.8);">
+        <td style="padding:10px; border:1px solid gold;">سنة الفجر</td>
+        <td style="padding:10px; border:1px solid gold;">2 </td>
+        <td style="padding:10px; border:1px solid gold;">قبل الفريضة</td>
+      </tr>
+      <tr style="background:rgba(72,80,76,0.9);">
+        <td style="padding:10px; border:1px solid gold;">سنة الظهر</td>
+        <td style="padding:10px; border:1px solid gold;">6 </td>
+        <td style="padding:10px; border:1px solid gold;">4 ركعات قبل الفريضة + 2 بعد الفريضة</td>
+      </tr>
+      <tr style="background:rgba(72,80,76,0.8);">
+        <td style="padding:10px; border:1px solid gold;">سنة العصر</td>
+        <td style="padding:10px; border:1px solid gold;">لا يوجد سنة مؤكدة</td>
+        <td style="padding:10px; border:1px solid gold;">-</td>
+      </tr>
+      <tr style="background:rgba(72,80,76,0.9);">
+        <td style="padding:10px; border:1px solid gold;">سنة المغرب</td>
+        <td style="padding:10px; border:1px solid gold;">2 </td>
+        <td style="padding:10px; border:1px solid gold;">بعد الفريضة</td>
+      </tr>
+     <tr style="background:rgba(72,80,76,0.8);">
+  <td style="padding:10px; border:1px solid gold;">سنة العشاء</td>
+  <td style="padding:10px; border:1px solid gold;">2  والشفع والوتر</td>
+  <td style="padding:10px; border:1px solid gold;">ركعتين بعد الفريضة والشفع والوتر</td>
+   </tr>
+       <tr style="background:rgba(72,80,76,0.9);">
+        <td style="padding:10px; border:1px solid gold;">تحية المسجد</td>
+        <td style="padding:10px; border:1px solid gold;">2 </td>
+        <td style="padding:10px; border:1px solid gold;">عند دخول المسجد</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+    <a href="index.html">العودة للرئيسية</a>
+  </div>
+</body>
+
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; overflow-x:hidden; }
+
+body {
+  font-family:'Cairo',sans-serif;
+  background:gold;
+  color:#fff;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow-y:auto;
+   touch-action: pan-y;
+}
+
+.page-background {
+  position: fixed;
+  inset: 0; /* top:0; left:0; right:0; bottom:0 */
+  background: url('background.jpg') center/cover no-repeat;
+  background-size: cover;
+  filter: brightness(0.7);
+  z-index: -1;
+}
+
+.content {
+  width: 100%;
+  max-width: 720px;
+  padding: 20px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+h2{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  margin:6px 0 12px;
+  background: linear-gradient(90deg,#eeff00,#fffb00);
+   background-clip: text; 
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 6px rgba(255,215,0,0.15);
+}
+label{display:block;color:#000;margin-top:8px;margin-bottom:6px;font-size:14px}
+select{
+  width:92%;max-width:360px;
+  padding:10px 12px;
+  border-radius:12px;
+  background: rgba(255, 71, 71, 0.281); 
+  color:hsl(66, 100%, 77%);
+  border:1px solid #d4af37;
+  font-size:15px;
+  margin:8px auto 12px;
+  display:block;
+}
+.cards{
+  width:95%;
+  max-width:980px;
+  margin:18px auto;
+  display:grid;
+  gap:12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.card{
+  position:relative;
+  min-height:120px;
+  border-radius:14px;
+  overflow:hidden;
+  color:#fff;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  text-align:center;
+  background:rgba(13,13,13,0.6);
+  backdrop-filter: blur(0px);
+  transition: transform .25s, box-shadow .25s, opacity .25s;
+  box-shadow:0 0 8px rgba(212,175,55,0.08);
+  background-size:cover;
+  background-position:center;
+  z-index:2;
+  animation: glowCard 2.5s infinite ease-in-out;
+}
+@keyframes glowCard{
+  0%{box-shadow:0 0 6px rgba(212,175,55,0.15)}
+  50%{box-shadow:0 0 18px rgba(255,215,0,0.25)}
+  100%{box-shadow:0 0 6px rgba(212,175,55,0.15)}
+}
+.card .icon{font-size:28px;margin-bottom:6px}
+.card h3{color:#ffd700;font-size:16px;margin-bottom:4px}
+.card .time{font-size:16px;font-weight:600;text-shadow:0 1px 0 rgba(0,0,0,0.5)}
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.5));
+  z-index:1;
+}
+.card *{position:relative; z-index:2}
+.status{
+  margin-top:8px;color:#000;font-size:14px;
+  opacity:0.95;
+}
+a{
+  color: gold;
+  display: block;
+  text-align: center;
+  margin-top: 25px;
+  text-decoration: none;
+}
+
+/* Toggle Switch */
+.switch-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:12px;
+  gap:10px;
+}
+.switch-label{
+  font-size:16px;
+  font-weight:600;
+  color:rgb(251, 255, 0);
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width:50px;
+  height:28px;
+}
+.switch input{display:none;}
+.slider{
+  position:absolute;
+  cursor:pointer;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(255, 0, 0, 0.25);
+  border-radius:30px;
+  transition:0.4s;
+}
+.slider:before{
+  position:absolute;
+  content:"";
+  height:22px; width:22px;
+  left:3px; bottom:3px;
+  background:#ffd700;
+  border-radius:50%;
+  transition:0.4s;
+}
+input:checked + .slider{background: rgba(0,255,0,0.4);}
+input:checked + .slider:before{transform:translateX(22px);}
+
+/* Floating elements */
+.flower, .moon{
+  position:absolute;
+  font-size:1.9rem;
+  pointer-events:none;
+  z-index:0;
+  color:#ffd766;
+  opacity:0.9;
+  filter:drop-shadow(0 0 4px rgba(255,200,0,0.25));
+}
+#sparkle-container{position:fixed;inset:0;pointer-events:none;z-index:60}
+@media(max-width:600px){
+  h2{font-size:22px}
+  .card{min-height:110px;padding:10px}
+  .card .icon{font-size:24px}
+  .card h3{font-size:15px}
+  .card .time{font-size:15px}
+  select{max-width:100%}
+}
+</style>
+
+<script>
+// ===== Country / City Data =====
+const countryCityMap = {
+  "Egypt":["Alexandria","Cairo","Giza","Mansoura","Tanta","Suez","Dahab","Sharm El Sheikh","Hurghada"],
+  "Saudi Arabia":["Mecca","Medina","Riyadh","Jeddah","Dammam"],
+  "United Arab Emirates": ["Dubai","Abu Dhabi","Sharjah","Ajman","Fujairah","Ras Al Khaimah"],
+  "Kuwait":["Kuwait City","Salmiya","Hawalli"],
+  "Qatar":["Doha","Al Wakrah","Al Rayyan"],
+  "Bahrain":["Manama","Riffa"],
+  "Oman":["Muscat","Salalah"],
+  "Jordan":["Amman","Irbid","Aqaba"],
+  "Iraq":["Baghdad","Basra","Najaf","Karbala"],
+  "Yemen":["Sana'a","Aden"],
+  "Morocco":["Casablanca","Rabat","Marrakech","Fes"],
+  "Algeria":["Algiers","Oran","Constantine"],
+  "Tunisia":["Tunis","Sfax","Sousse"],
+  "Libya":["Tripoli","Benghazi"],
+  "Sudan":["Khartoum","Omdurman"],
+  "Turkey":["Istanbul","Ankara","Izmir"],
+  "Iran":["Tehran","Mashhad","Isfahan"],
+  "Pakistan":["Karachi","Lahore","Islamabad"],
+  "Afghanistan":["Kabul","Herat"],
+  "Indonesia":["Jakarta","Surabaya","Bandung"],
+  "Malaysia":["Kuala Lumpur","Penang"],
+  "Bangladesh":["Dhaka","Chittagong"],
+  "Kazakhstan":["Almaty","Astana"],
+  "Uzbekistan":["Tashkent","Samarkand"],
+  "Azerbaijan":["Baku"],
+  "United Kingdom":["London","Manchester","Birmingham"],
+  "France":["Paris","Marseille","Lyon"],
+  "Germany":["Berlin","Munich","Hamburg"],
+  "Italy":["Rome","Milan"],
+  "Spain":["Madrid","Barcelona"],
+  "Netherlands":["Amsterdam","Rotterdam"],
+  "Belgium":["Brussels","Antwerp"],
+  "Sweden":["Stockholm","Malmo"],
+  "Austria":["Vienna"],
+  "United States":["New York","Los Angeles","Chicago","Houston","Dallas","Detroit","Miami"],
+  "India":["Delhi","Mumbai","Hyderabad"],
+  "South Africa":["Johannesburg","Cape Town"]
+};
+const prayerImages = { 'Fajr':'fajr.jpg','Sunrise':'sunrise.jpg','Dhuhr':'dhuhr.jpg','Asr':'asr.jpg','Maghrib':'maghrib.jpg','Isha':'isha.jpg'};
+const countrySelect = document.getElementById('country');
+const citySelect = document.getElementById('city');
+const statusEl = document.getElementById('status');
+const cardsContainer = document.getElementById('prayer-cards');
+const useLocationToggle = document.getElementById('useLocationToggle');
+
+// Populate country
+Object.keys(countryCityMap).forEach(c=>{
+  const o = document.createElement('option');
+  o.value=c; o.textContent=c;
+  countrySelect.appendChild(o);
+});
+
+// Update cities
+function updateCities(){
+  const country = countrySelect.value;
+  citySelect.innerHTML='';
+  const cities = countryCityMap[country] || [];
+  cities.forEach(city=>{
+    const o=document.createElement('option');
+    o.value=city; o.textContent=city;
+    citySelect.appendChild(o);
+  });
+}
+
+// Render empty cards
+function renderEmptyCards(){
+  const prayers=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+  cardsContainer.innerHTML='';
+  prayers.forEach(p=>{
+    const c=document.createElement('div');
+    c.className='card';
+    c.style.backgroundImage=`url('${prayerImages[p]}')`;
+    c.innerHTML=`<div class="icon">${{'Fajr':'🌅','Sunrise':'🌄','Dhuhr':'☀️','Asr':'🌤️','Maghrib':'🌇','Isha':'🌙'}[p]}</div>
+                   <h3>${p}</h3>
+                   <div class="time">--:--</div>`;
+    cardsContainer.appendChild(c);
+  });
+}
+
+// Convert to AM/PM
+function convertToAMPM(raw){
+  if(!raw) return '--:--';
+  raw = raw.trim().split(' ')[0];
+  const parts = raw.split(':');
+  if(parts.length<2) return raw;
+  let hour = parseInt(parts[0]), minute = parts[1].padStart(2,'0');
+  const ampm = hour>=12?'PM':'AM';
+  hour = hour%12||12;
+  return `${hour}:${minute} ${ampm}`;
+}
+
+// Load prayer times
+async function loadPrayerTimes(city){
+  if(!city) return;
+  statusEl.textContent='Loading prayer times...';
+  try{
+    const url=`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(countrySelect.value)}&method=5&adjustment=0`;
+    const res=await fetch(url);
+    const json=await res.json();
+    const timings=json.data?.timings;
+    sendPrayerDataToFirebase(city, countrySelect.value, timings);
+    if(!timings) throw new Error('No timings returned');
+    ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'].forEach((p,i)=>{
+      const card=cardsContainer.children[i];
+      card.querySelector('.time').textContent=convertToAMPM(timings[p]);
+    });
+    statusEl.textContent=`Prayer times for ${city}, ${countrySelect.value}`;
+  }catch(e){
+    statusEl.textContent='Could not load prayer times for this city.';
+    [...cardsContainer.children].forEach(c=>c.querySelector('.time').textContent='--:--');
+  }
+}
+
+// ===== Auto detect location =====
+async function detectLocation(){
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    try{
+      const lat=pos.coords.latitude;
+      const lon=pos.coords.longitude;
+      const res=await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+      const data=await res.json();
+      const country=data.countryName;
+      const city=data.city;
+      if(countryCityMap[country]){
+        countrySelect.value=country;
+        updateCities();
+        if(countryCityMap[country].includes(city)) citySelect.value=city;
+        renderEmptyCards();
+        loadPrayerTimes(citySelect.value);
+        statusEl.textContent=`Detected location: ${city}, ${country}`;
+      }
+    }catch(e){console.log(e);}
+  });
+}
+
+// Toggle behavior
+useLocationToggle.addEventListener('change',()=>{
+  if(useLocationToggle.checked){
+    detectLocation();
+    countrySelect.disabled=true;
+    citySelect.disabled=true;
+  }else{
+    countrySelect.disabled=false;
+    citySelect.disabled=false;
+    statusEl.textContent='';
+  }
+});
+
+// Manual selection
+countrySelect.addEventListener('change',()=>{
+  updateCities();
+  renderEmptyCards();
+  loadPrayerTimes(citySelect.value);
+});
+citySelect.addEventListener('change',()=>loadPrayerTimes(citySelect.value));
+
+// Initial
+updateCities();
+renderEmptyCards();
+loadPrayerTimes(citySelect.value);
+
+// Flowers & Moons animation (unchanged)
+const flowerContainer = document.getElementById('flower-container');
+const moonContainer = document.getElementById('moon-container');
+
+let randomFlowers = [];
+let randomMoons = [];
+
+window.addEventListener('load', ()=>{
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const flowerEmoji = '🏵️';
+  const moonEmoji = '🌙';
+
+  for(let i=0;i<7;i++){
+    const flower = document.createElement('div');
+    flower.classList.add('flower');
+    flower.innerText = flowerEmoji;
+    flower.style.top = `${Math.random()*screenHeight*0.8}px`;
+    flower.style.left = `${Math.random()*screenWidth*0.8}px`;
+    flower.vx = (Math.random()*2-1) * 0.7;
+    flower.vy = (Math.random()*2-1) * 0.7;
+    flowerContainer.appendChild(flower);
+    randomFlowers.push(flower);
+  }
+
+  for(let i=0;i<7;i++){
+    const moon = document.createElement('div');
+    moon.classList.add('moon');
+    moon.innerText = moonEmoji;
+    moon.style.top = `${Math.random()*screenHeight*0.8}px`;
+    moon.style.left = `${Math.random()*screenWidth*0.8}px`;
+    moon.vx = (Math.random()*2-1) * 0.7;
+    moon.vy = (Math.random()*2-1) * 0.7;
+    moonContainer.appendChild(moon);
+    randomMoons.push(moon);
+  }
+
+  setInterval(()=>{
+    [...randomFlowers,...randomMoons].forEach(el=>{
+      let x = parseFloat(el.style.left) + el.vx;
+      let y = parseFloat(el.style.top) + el.vy;
+      if(x<0 || x>screenWidth-20) el.vx*=-1;
+      if(y<0 || y>screenHeight-20) el.vy*=-1;
+      el.style.left = `${Math.max(0, Math.min(screenWidth-20, x))}px`;
+      el.style.top = `${Math.max(0, Math.min(screenHeight-20, y))}px`;
+    });
+  },25);
+
+})
+
+</script>
+<script src="pullRefresh.js"></script>
+
+<script>
+// ===== حفظ واسترجاع حالة Use Location =====
+window.addEventListener('load', () => {
+    // استرجاع حالة زر Use Location
+    const savedUseLocation = localStorage.getItem("useLocationEnabled") === "true";
+    useLocationToggle.checked = savedUseLocation;
+
+    // استرجاع البلد والمدينة
+    const savedCountry = localStorage.getItem("selectedCountry");
+    const savedCity = localStorage.getItem("selectedCity");
+
+    if(savedCountry && countryCityMap[savedCountry]){
+        countrySelect.value = savedCountry;
+        updateCities(); // تحديث المدن
+        if(savedCity && countryCityMap[savedCountry].includes(savedCity)){
+            citySelect.value = savedCity;
+        }
+    }
+
+    // إذا Use Location مفعل، نفعل التحديد التلقائي
+    if(savedUseLocation){
+        useLocationToggle.checked = true;
+        detectLocation();
+        countrySelect.disabled = true;
+        citySelect.disabled = true;
+    } else {
+        countrySelect.disabled = false;
+        citySelect.disabled = false;
+    }
+
+    // تحديث أوقات الصلاة مباشرة
+    renderEmptyCards();
+    loadPrayerTimes(citySelect.value);
+});
+
+// ===== عند تغيير Use Location Toggle =====
+useLocationToggle.addEventListener('change', () => {
+    const enabled = useLocationToggle.checked;
+    localStorage.setItem("useLocationEnabled", enabled);
+
+    if(enabled){
+        detectLocation();
+        countrySelect.disabled = true;
+        citySelect.disabled = true;
+    } else {
+        countrySelect.disabled = false;
+        citySelect.disabled = false;
+    }
+});
+
+// ===== عند تغيير البلد أو المدينة يدويًا نخزنهم =====
+countrySelect.addEventListener("change", () => {
+    localStorage.setItem("selectedCountry", countrySelect.value);
+    updateCities();
+    renderEmptyCards();
+    loadPrayerTimes(citySelect.value);
+});
+
+citySelect.addEventListener("change", () => {
+    localStorage.setItem("selectedCity", citySelect.value);
+    renderEmptyCards();
+    loadPrayerTimes(citySelect.value);
+});
+</script>
+<script>
+async function sendPrayerDataToFirebase(city, country, timings){
+  const token = localStorage.getItem("fcmToken");
+  if(!token) return;
+
+  const payload = {
+    token,
+    city,
+    country,
+    prayers: {
+      Fajr: timings.Fajr,
+      Dhuhr: timings.Dhuhr,
+      Asr: timings.Asr,
+      Maghrib: timings.Maghrib,
+      Isha: timings.Isha
+    },
+    updatedAt: Date.now()
+  };
+
+  // ===== Mock fetch =====
+    console.log("Sending prayer data:", payload);
+    
+    // لو عايز تحاكي الـ fetch بدون خطأ:
+    await new Promise(resolve => setTimeout(resolve, 500)); // simulate network delay
+    console.log("Prayer data 'sent' successfully (mock)");
+}
+</script>
+</script>
+
+</body>
+</html>

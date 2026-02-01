@@ -1,0 +1,20 @@
+{
+  "name": "BoB Reminder",
+  "short_name": "BoB",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#FFD700",
+  "icons": [
+    {
+      "src": "bob.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "bob.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
