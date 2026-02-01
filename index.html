@@ -437,11 +437,12 @@ if(enabled){
 
   if(permission === "granted"){
     navigator.serviceWorker.ready.then(registration => {
-      registration.showNotification("Welcome to BOB Reminder 🔔", {
-        body: "Your daily companion for prayer and peace 🤍",
-        icon: "icon-192.png",
-        badge: "icon-192.png"
-      });
+registration.showNotification("BOB Reminder 🤍", {
+  body: "نسأل الله أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+  icon: "icon-192.png",
+  badge: "icon-192.png",
+  tag: "welcome"
+});
     });
   } else {
     notifyToggle.checked = false;
@@ -462,3 +463,4 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
