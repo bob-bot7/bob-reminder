@@ -12,7 +12,7 @@
 /* ... كل الـ CSS كما هو ... */
 * { margin:0; padding:0; box-sizing:border-box; }
 body {  font-size:18px;   /* 👈 ده السر */
-  line-height:1.9;  /* مريح للقراءة */font-family:'Cairo',sans-serif; background:gold; color:#fff; text-align:center;position: relative; overflow:hidden; touch-action: pan-y;} 
+  line-height:1.9;  /* مريح للقراءة */font-family:'Cairo',sans-serif; background:gold; color:#fff; text-align:center; position: relative; overflow:auto; touch-action: pan-y;} 
 .page-bg { position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('shaaban-bg.jpg'); background-size:cover; background-position:center; filter:brightness(0.85) contrast(1.1); z-index:1; }
 .header { font-family:'Playfair Display', serif; font-size:2.4em; color:#fbff06; margin-top:20px; position:relative; z-index:10; animation:glow 2s infinite alternate; padding:0 10px; word-wrap:break-word; }
 @keyframes glow { 0% { text-shadow:0 0 5px gold,0 0 20px #FFB300; } 100% { text-shadow:0 0 15px gold,0 0 40px #FFB300; } }
@@ -84,14 +84,20 @@ body {  font-size:18px;   /* 👈 ده السر */
   <li>الاستعداد لشهر رمضان بالطاعات والتزود من الخير.</li>
   <li>الصدقة ومساعدة المحتاجين.</li>
 </ul>
-
-
-<div class="content-box section">
+<div class="content-box section ">
 <h2>دعاء اليوم</h2>
 <p id="duaDisplay">اللهم بارك لنا في شعبان وبلغنا رمضان</p>
 <button class="dua-btn" onclick="getDua()">تغيير الدعاء 🔄</button>
 <button class="share-btn" onclick="shareDua()">مشاركة الدعاء 📤</button>
 </div>
+
+
+</div>
+<div class="content-box section">
+  <h2>  ✨ استعد لرمضان ✨</h2>
+  <p>شعبان هو فرصة لتجهيز قلبك وروحك، تخلص من العادات السيئة وابدأ في تحضير قلبك لشهر الخير.</p>
+</div>
+
 
 <div id="flowerContainer"></div>
 <div id="moonContainer"></div>
