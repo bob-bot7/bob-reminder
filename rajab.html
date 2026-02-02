@@ -9,9 +9,9 @@
 <meta name="theme-color" content="#0a0a0a">
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+* {  margin:0; padding:0; box-sizing:border-box; }
 body {  font-size:18px;   /* 👈 ده السر */
-  line-height:1.9;  /* مريح للقراءة */font-family:'Cairo',sans-serif;background:gold; color:#fff; text-align:center; overflow:hidden; touch-action: pan-y;} 
+  line-height:1.9;  /* مريح للقراءة */font-family:'Cairo',sans-serif;background:gold; color:#fff; text-align:center; overflow:auto; touch-action: pan-y;} 
 .page-bg { position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('rajab-bg.jpg'); background-size:cover; background-position:center; filter:brightness(0.85) contrast(1.1); z-index:1; }
 .header { font-family:'Playfair Display', serif; font-size:2.4em; color:#FFD700; margin-top:20px; position:relative; z-index:10; animation:glow 2s infinite alternate; padding:0 10px; word-wrap:break-word; }
 @keyframes glow { 0% { text-shadow:0 0 5px gold,0 0 20px #FFB300; } 100% { text-shadow:0 0 15px gold,0 0 40px #FFB300; } }
@@ -41,6 +41,7 @@ body {  font-size:18px;   /* 👈 ده السر */
   box-shadow: 0 0 25px #fffb00;
 }
 }
+
 </style>
 </head>
 <head>
@@ -68,6 +69,8 @@ body {  font-size:18px;   /* 👈 ده السر */
 شهر رجب من الأشهر الحُرم<br>
 يُستحب فيه تعظيم الطاعة وترك المعاصي
 </p>
+</div>
+
 
 </div>
 
@@ -82,14 +85,19 @@ body {  font-size:18px;   /* 👈 ده السر */
   <li>طلب العفو والتوبة من الذنوب.</li>
   <li>الإكثار من الصلاة على النبي ﷺ.</li>
 </ul>
-
-
 <div class="content-box section">
 <h2>دعاء اليوم</h2>
 <p id="duaDisplay">اللهم اجعلنا من المقبولين في شهر رجب</p>
 <button class="dua-btn" onclick="getDua()">تغيير الدعاء 🔄</button>
 <button class="share-btn" onclick="shareDua()">مشاركة الدعاء 📤</button>
 </div>
+
+</div>
+<div class="content-box section">
+  <h2>✨ نصيحة رجب ✨</h2>
+  <p>ابدأ هذا الشهر بقلب صافٍ ونية صادقة، واجعل كل يوم فرصة للتقرب من الله.</p>
+</div>
+
 
 <div id="flowerContainer"></div>
 <div id="moonContainer"></div>
