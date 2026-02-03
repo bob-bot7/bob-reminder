@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
+<!-- Open Graph / WhatsApp / Facebook -->
+<meta property="og:title" content="BOB Reminder 🔔">
+<meta property="og:description" content="رفيقك اليومي للأذكار، الآيات، والراحة 🤍">
+<meta property="og:image" content="https://bob-reminder.vercel.app/share.jpg">
+<meta property="og:url" content="https://bob-reminder.vercel.app">
+<meta property="og:type" content="website">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BOB Reminder 🔔">
+<meta name="twitter:description" content="رفيقك اليومي للأذكار، الآيات، والراحة 🤍">
+<meta name="twitter:image" content="https://bob-reminder.vercel.app/share.jpg">
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
 <!-- PWA Manifest -->
@@ -116,7 +132,7 @@ h1 {
 .card-subtitle { font-size:0.9em; color:#fff; margin-top:5px; opacity:0; text-shadow:0 0 5px #000; transition: opacity 0.3s; }
 .card:hover .card-subtitle { opacity:1; }
 .flower, .moon { position:absolute; font-size:1.5em; color:#FFD700; z-index:5; pointer-events:none; }
-.footer { position:fixed; bottom:0; width:100%; padding:5px 0; background: rgba(0,0,0,0.3); font-size:0.8em; color:#FFD700; text-align:center; z-index:10; }
+.footer { position:fixed; bottom:0; width:100%; padding:5px 0; background: rgba(0,0,0,0.3); font-size:0.7em; color:#FFD700; text-align:center; z-index:10; }
 .donation-footer { font-size:1em; color:#FFD700; margin-top:5px; }
 
 /* Toggle ON/OFF */
@@ -230,7 +246,7 @@ input:checked + .slider:before {
 <!-- الكروت -->
 <div class="cards-container" id="cardsContainer">
   <a class="card" href="salat.html" style="background-image:url('salat.jpg')"><div class="card-title">الصلاة</div><div class="card-subtitle">مواقيت الصلاة</div></a>
-  <a class="card" href="azkar-after-prayer.html" style="background-image:url('azkar.jpg')"><div class="card-title">أذكار بعد الصلاة</div><div class="card-subtitle">لا تترك صلاتك بلا ذكر</div>
+  <a class="card" href="azkar-after-prayer.html" style="background-image:url('azkar.jpg')"><div class="card-title">أذكار بعد الصلاة</div><div class="card-subtitle">لا تترك صلاتك بلا ذكر</div></a>
   <a class="card" href="tasbeeh.html" style="background-image:url('tasbeeh.jpg')"><div class="card-title">التسبيح</div><div class="card-subtitle">أذكار وأدعية</div></a>
   <a class="card" href="dua-rasool.html" style="background-image:url('rasool.jpg')"><div class="card-title">من دعاء الرسول ﷺ</div><div class="card-subtitle">أدعية من السنة</div></a>
   <a class="card" href="prophets-dua.html" style="background-image:url('prophets.jpg')"><div class="card-title"> أدعيه الأنبياء عليهم السلام</div><div class="card-subtitle"> أدعية من القرآن </div></a>
@@ -437,12 +453,11 @@ if(enabled){
 
   if(permission === "granted"){
     navigator.serviceWorker.ready.then(registration => {
-registration.showNotification(" Welcome 🤍", {
-  body: "نسأل الله أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
-  icon: "icon-192.png",
-  badge: "icon-192.png",
-  tag: "welcome"
-});
+      registration.showNotification("Welcome 🤍", {
+        body: "Your daily companion for prayer and peace 🤍",
+        icon: "icon-192.png",
+        badge: "icon-192.png"
+      });
     });
   } else {
     notifyToggle.checked = false;
