@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>أدعية الرسول ﷺ - BOB Reminder</title>
+<!-- Open Graph / WhatsApp -->
+<meta property="og:title" content="BOB Reminder">
+<meta property="og:description" content="أدعية الرسول ﷺ">
+<meta property="og:image" content="https://bob-reminder.vercel.app/bob.jpg">
+<meta property="og:url" content="https://bob-reminder.vercel.app">
+<meta property="og:type" content="website">
+
 
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
@@ -343,11 +350,11 @@ document.addEventListener('DOMContentLoaded', getDua);
 
 // مشاركة الدعاء
 function shareDua() {
-  const text = document.getElementById('duaDisplay').innerText;
   const url = encodeURIComponent(window.location.href);
-  const shareText = encodeURIComponent(text + "\nشارك الدعاء عبر BoB Reminder: " + url);
-  window.open(`https://wa.me/?text=${shareText}`, '_blank');
+  const text = encodeURIComponent(document.getElementById('duaDisplay').innerText + "\nشارك الدعاء عبر BOB Reminder:");
+  window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
 }
+
 </script>
 
 
@@ -392,3 +399,4 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
+
