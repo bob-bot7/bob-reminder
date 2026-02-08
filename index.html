@@ -440,46 +440,58 @@ document.addEventListener('touchmove', e=>{
 <script>
 const notifyToggle = document.getElementById("notifyToggle");
 
-// استرجاع حالة الاشتراك عند فتح الموقع
-OneSignal.push(function () {
-  OneSignal.init({
-    appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
-    notifyButton: { enable: false }
-  });
+// استرجاع حالة toggle من localStorage عند تحميل الصفحة
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("notifyToggle");
+  if (saved !== null) {
+    notifyToggle.checked = saved === "true";
+  }
 
-  // مزامنة toggle مع حالة الاشتراك
-  OneSignal.isPushNotificationsEnabled(function(enabled) {
-    notifyToggle.checked = enabled;
-    
-    // لو مش مشترك، اطلب الإذن فورًا
-    if (!enabled) {
-      OneSignal.showNativePrompt();
-    } else {
-      // لو مشترك بالفعل، نبعت إشعار ترحيبي فورًا
-      OneSignal.sendSelfNotification(
-        "مرحبًا 🌙",
-        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
-        "https://bob-reminder.vercel.app",
-        {icon: "icon-192.png"}
-      );
-    }
-  });
+  // تهيئة OneSignal
+  OneSignal.push(function () {
+    OneSignal.init({
+      appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
+      notifyButton: { enable: false }
+    });
 
-  // بعد ما المستخدم يوافق على الإذن، نبعت إشعار فوري
-  OneSignal.on('subscriptionChange', function (isSubscribed) {
-    if (isSubscribed) {
-      OneSignal.sendSelfNotification(
-        "مرحبًا 🌙",
-        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
-        "https://bob-reminder.vercel.app",
-        {icon: "icon-192.png"}
-      );
-    }
-  });
+    // مزامنة toggle مع حالة الاشتراك الفعلية
+    OneSignal.isPushNotificationsEnabled(function(enabled) {
+      // لو localStorage موجود، نعطيه الأولوية
+      if (saved !== null) {
+        notifyToggle.checked = saved === "true";
+      } else {
+        notifyToggle.checked = enabled;
+      }
 
+      // إذا مش مشترك، اطلب الإذن فورًا
+      if (!enabled && notifyToggle.checked) {
+        OneSignal.showNativePrompt();
+      } else if (enabled) {
+        // لو مشترك بالفعل، نبعت إشعار ترحيبي فورًا
+        OneSignal.sendSelfNotification(
+          "مرحبًا 🌙",
+          "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+          "https://bob-reminder.vercel.app",
+          {icon: "icon-192.png"}
+        );
+      }
+    });
+
+    // بعد ما المستخدم يوافق على الإذن، نبعت إشعار الترحيب مرة واحدة
+    OneSignal.on('subscriptionChange', function (isSubscribed) {
+      if (isSubscribed) {
+        OneSignal.sendSelfNotification(
+          "مرحبًا 🌙",
+          "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+          "https://bob-reminder.vercel.app",
+          {icon: "icon-192.png"}
+        );
+      }
+    });
+  });
 });
 
-// لما المستخدم يغير حالة Toggle
+// لما المستخدم يغير toggle
 notifyToggle.addEventListener("change", function () {
   OneSignal.push(function () {
     if (notifyToggle.checked) {
@@ -490,7 +502,11 @@ notifyToggle.addEventListener("change", function () {
       OneSignal.setSubscription(false);
     }
   });
+
+  // حفظ الحالة في localStorage
+  localStorage.setItem("notifyToggle", notifyToggle.checked);
 });
+
 </script>
 </body>
 </html>
