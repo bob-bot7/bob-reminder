@@ -10,7 +10,6 @@
     });
   });
 </script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
@@ -438,22 +437,53 @@ document.addEventListener('touchmove', e=>{
 
 <script src="pullRefresh.js"></script>
 
-</script>
 <script>
 const notifyToggle = document.getElementById("notifyToggle");
 
 // استرجاع حالة الاشتراك عند فتح الموقع
 OneSignal.push(function () {
-  OneSignal.isPushNotificationsEnabled(function (enabled) {
-    notifyToggle.checked = enabled; // يحط toggle على ON أو OFF حسب الاشتراك
+  OneSignal.init({
+    appId: "PUT_YOUR_ONESIGNAL_APP_ID_HERE",
+    notifyButton: { enable: false }
   });
+
+  // مزامنة toggle مع حالة الاشتراك
+  OneSignal.isPushNotificationsEnabled(function(enabled) {
+    notifyToggle.checked = enabled;
+    
+    // لو مش مشترك، اطلب الإذن فورًا
+    if (!enabled) {
+      OneSignal.showNativePrompt();
+    } else {
+      // لو مشترك بالفعل، نبعت إشعار ترحيبي فورًا
+      OneSignal.sendSelfNotification(
+        "مرحبًا 🌙",
+        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+        "https://bob-reminder.vercel.app",
+        {icon: "icon-192.png"}
+      );
+    }
+  });
+
+  // بعد ما المستخدم يوافق على الإذن، نبعت إشعار فوري
+  OneSignal.on('subscriptionChange', function (isSubscribed) {
+    if (isSubscribed) {
+      OneSignal.sendSelfNotification(
+        "مرحبًا 🌙",
+        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+        "https://bob-reminder.vercel.app",
+        {icon: "icon-192.png"}
+      );
+    }
+  });
+
 });
 
-// لما المستخدم يغيّر Toggle
+// لما المستخدم يغير حالة Toggle
 notifyToggle.addEventListener("change", function () {
   OneSignal.push(function () {
     if (notifyToggle.checked) {
-      // يطلب إذن الإشعارات
+      // يطلب إذن الإشعارات إذا مش مشترك
       OneSignal.showNativePrompt();
     } else {
       // إلغاء الاشتراك
@@ -462,10 +492,8 @@ notifyToggle.addEventListener("change", function () {
   });
 });
 </script>
-
 </body>
 </html>
-
 
 
 
