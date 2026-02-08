@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
+    });
+  });
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
@@ -429,9 +439,34 @@ document.addEventListener('touchmove', e=>{
 <script src="pullRefresh.js"></script>
 
 </script>
+<script>
+const notifyToggle = document.getElementById("notifyToggle");
+
+// استرجاع حالة الاشتراك عند فتح الموقع
+OneSignal.push(function () {
+  OneSignal.isPushNotificationsEnabled(function (enabled) {
+    notifyToggle.checked = enabled; // يحط toggle على ON أو OFF حسب الاشتراك
+  });
+});
+
+// لما المستخدم يغيّر Toggle
+notifyToggle.addEventListener("change", function () {
+  OneSignal.push(function () {
+    if (notifyToggle.checked) {
+      // يطلب إذن الإشعارات
+      OneSignal.showNativePrompt();
+    } else {
+      // إلغاء الاشتراك
+      OneSignal.setSubscription(false);
+    }
+  });
+});
+</script>
 
 </body>
 </html>
+
+
 
 
 
