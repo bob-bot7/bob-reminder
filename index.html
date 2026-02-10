@@ -443,25 +443,32 @@ const notifyToggle = document.getElementById("notifyToggle");
 
 window.OneSignalDeferred.push(function(OneSignal) {
 
-  // مزامنة التوجل مع حالة الاشتراك الحقيقية
-  OneSignal.isPushNotificationsEnabled().then(enabled => {
+  // دالة لمزامنة حالة Toggle
+  async function syncToggle() {
+    const enabled = await OneSignal.isPushNotificationsEnabled();
     notifyToggle.checked = enabled;
-  });
+  }
 
-  // لما المستخدم يدوس
-  notifyToggle.addEventListener("change", () => {
+  // نفذ أول مرة عند تحميل الصفحة
+  syncToggle();
+
+  // نفذ لما الصفحة ترجع تركيز (focus)
+  window.addEventListener("focus", syncToggle);
+
+  // لما المستخدم يدوس على Toggle
+  notifyToggle.addEventListener("change", async () => {
     if (notifyToggle.checked) {
-      OneSignal.showNativePrompt();
+      await OneSignal.showNativePrompt();
+      await syncToggle(); // تحديث الحالة بعد السماح أو الرفض
     } else {
-      // منع الإلغاء من الموقع
+      // منع الإلغاء من الموقع نفسه
       notifyToggle.checked = true;
-      alert("يمكنك إيقاف الإشعارات من إعدادات المتصفح");
+      alert("يمكنك إيقاف الإشعارات من إعدادات المتصفح.");
     }
   });
-
 });
+
 </script>
 
 </body>
 </html>
-
