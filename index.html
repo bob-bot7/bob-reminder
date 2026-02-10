@@ -390,7 +390,7 @@ shareBtn.addEventListener('click', ()=>{
 });
 
 // تحديث روابط المشاركة
-const pageUrl = encodeURIComponent(window.location.href);
+const pageUrl = encodeURIComponent('https://bob-bot7.github.io/bob-reminder/');
 document.getElementById('waShare').href = `https://wa.me/?text=${pageUrl}`;
 document.getElementById('fbShare').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
 document.getElementById('tgShare').href = `https://t.me/share/url?url=${pageUrl}`;
@@ -464,3 +464,4 @@ window.OneSignalDeferred.push(function(OneSignal) {
 
 </body>
 </html>
+
