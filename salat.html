@@ -99,7 +99,7 @@ body {
 .page-background {
   position: fixed;
   inset: 0; /* top:0; left:0; right:0; bottom:0 */
-  background: url('background.jpg') center/cover no-repeat;
+  background: url('background.webp') center/cover no-repeat;
   background-size: cover;
   filter: brightness(0.7);
   z-index: -1;
@@ -432,7 +432,7 @@ window.addEventListener('load', ()=>{
   const flowerEmoji = '🏵️';
   const moonEmoji = '🌙';
 
-  for(let i=0;i<7;i++){
+  for(let i=0;i<4;i++){
     const flower = document.createElement('div');
     flower.classList.add('flower');
     flower.innerText = flowerEmoji;
@@ -444,7 +444,7 @@ window.addEventListener('load', ()=>{
     randomFlowers.push(flower);
   }
 
-  for(let i=0;i<7;i++){
+  for(let i=0;i<3;i++){
     const moon = document.createElement('div');
     moon.classList.add('moon');
     moon.innerText = moonEmoji;
