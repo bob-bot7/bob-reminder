@@ -5,11 +5,10 @@
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-  appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
-  notifyButton: { enable: false }
-});
-});
+    await OneSignal.init({
+      appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
+    });
+  });
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,14 +16,14 @@
 <!-- Open Graph / WhatsApp / Facebook -->
 <meta property="og:title" content="BOB Reminder">
 <meta property="og:description" content="رفيقك اليومي للأذكار، الآيات، والأدعية">
-<meta property="og:image" content="https://bob-bot7.github.io/bob-reminder/bob.jpg">
-<meta property="og:url" content="https://bob-bot7.github.io/bob-reminder">
+<meta property="og:image" content="https://bob-reminder.vercel.app/bob.jpg">
+<meta property="og:url" content="https://bob-reminder.vercel.app">
 <meta property="og:type" content="website">
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="BOB Reminder">
 <meta name="twitter:description" content="رفيقك اليومي للأذكار، الآيات، والأدعية">
-<meta name="twitter:image" content="https://bob-bot7.github.io/bob-reminder/bob.jpg">
+<meta name="twitter:image" content="https://bob-reminder.vercel.app/bob.jpg">
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
@@ -251,9 +250,9 @@ input:checked + .slider:before {
 
 <!-- الكروت -->
 <div class="cards-container" id="cardsContainer">
-  <a class="card" href="salat.html" style="background-image:url('salat.jpg')"><div class="card-title">الصلاة</div><div class="card-subtitle">مواقيت الصلاة</div></a>
+  <a class="card" href="salat.html" style="background-image:url('salat.webp')"><div class="card-title">الصلاة</div><div class="card-subtitle">مواقيت الصلاة</div></a>
   <a class="card" href="azkar-after-prayer.html" style="background-image:url('azkar.jpg')"><div class="card-title">أذكار بعد الصلاة</div><div class="card-subtitle">لا تترك صلاتك بلا ذكر</div></a>
-  <a class="card" href="tasbeeh.html" style="background-image:url('tasbeeh.jpg')"><div class="card-title">التسبيح</div><div class="card-subtitle">أذكار وأدعية</div></a>
+  <a class="card" href="tasbeeh.html" style="background-image:url('tasbeeh.webp')"><div class="card-title">التسبيح</div><div class="card-subtitle">أذكار وأدعية</div></a>
   <a class="card" href="dua-rasool.html" style="background-image:url('rasool.jpg')"><div class="card-title">من دعاء الرسول ﷺ</div><div class="card-subtitle">أدعية من السنة</div></a>
   <a class="card" href="prophets-dua.html" style="background-image:url('prophets.jpg')"><div class="card-title"> أدعيه الأنبياء عليهم السلام</div><div class="card-subtitle"> أدعية من القرآن </div></a>
   <a class="card" href="quran.html" style="background-image:url('quran.jpg')"><div class="card-title">القرآن</div><div class="card-subtitle">آية اليوم</div></a>
@@ -390,7 +389,7 @@ shareBtn.addEventListener('click', ()=>{
 });
 
 // تحديث روابط المشاركة
-const pageUrl = encodeURIComponent('https://bob-bot7.github.io/bob-reminder/');
+const pageUrl = encodeURIComponent(window.location.href);
 document.getElementById('waShare').href = `https://wa.me/?text=${pageUrl}`;
 document.getElementById('fbShare').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
 document.getElementById('tgShare').href = `https://t.me/share/url?url=${pageUrl}`;
@@ -441,34 +440,63 @@ document.addEventListener('touchmove', e=>{
 <script>
 const notifyToggle = document.getElementById("notifyToggle");
 
-window.OneSignalDeferred.push(function(OneSignal) {
+// تهيئة OneSignal
+OneSignal.push(function () {
+  OneSignal.init({
+    appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
+    notifyButton: { enable: false }
+  });
 
-  // دالة لمزامنة حالة Toggle
-  async function syncToggle() {
-    const enabled = await OneSignal.isPushNotificationsEnabled();
-    notifyToggle.checked = enabled;
-  }
+  // استرجاع حالة toggle من localStorage
+  const savedToggle = localStorage.getItem("notifyToggle");
 
-  // نفذ أول مرة عند تحميل الصفحة
-  syncToggle();
-
-  // نفذ لما الصفحة ترجع تركيز (focus)
-  window.addEventListener("focus", syncToggle);
-
-  // لما المستخدم يدوس على Toggle
-  notifyToggle.addEventListener("change", async () => {
-    if (notifyToggle.checked) {
-      await OneSignal.showNativePrompt();
-      await syncToggle(); // تحديث الحالة بعد السماح أو الرفض
+  // مزامنة toggle مع حالة الاشتراك الفعلية
+  OneSignal.isPushNotificationsEnabled(function(enabled) {
+    // لو المستخدم مخزن اختيار في localStorage، نستخدمه
+    if (savedToggle !== null) {
+      notifyToggle.checked = savedToggle === "true";
     } else {
-      // منع الإلغاء من الموقع نفسه
-      notifyToggle.checked = true;
-      alert("يمكنك إيقاف الإشعارات من إعدادات المتصفح.");
+      notifyToggle.checked = enabled;
+    }
+
+    // نبعت إشعار ترحيبي فقط إذا مشترك
+    if (enabled) {
+      OneSignal.sendSelfNotification(
+        "مرحبًا 🌙",
+        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+        "https://bob-reminder.vercel.app",
+        {icon: "icon-192.png"}
+      );
+    }
+  });
+
+  // بعد ما المستخدم يوافق على الإذن، نبعت إشعار الترحيب مرة واحدة
+  OneSignal.on('subscriptionChange', function (isSubscribed) {
+    if (isSubscribed) {
+      OneSignal.sendSelfNotification(
+        "مرحبًا 🌙",
+        "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+        "https://bob-reminder.vercel.app",
+        {icon: "icon-192.png"}
+      );
     }
   });
 });
 
+// لما المستخدم يغير toggle
+notifyToggle.addEventListener("change", function () {
+  if (notifyToggle.checked) {
+    // يطلب إذن الإشعارات فقط إذا مش مشترك
+    OneSignal.push(function () { OneSignal.showNativePrompt(); });
+  } else {
+    OneSignal.push(function () { OneSignal.setSubscription(false); });
+  }
+
+  // حفظ الحالة المحلية فقط
+  localStorage.setItem("notifyToggle", notifyToggle.checked);
+});
 </script>
 
+</script>
 </body>
 </html>
