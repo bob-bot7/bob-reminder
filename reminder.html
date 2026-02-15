@@ -338,15 +338,10 @@ document.getElementById('reset-btn').onclick=()=>{
 
 checkNewDay();
 displayAzkar(azkarData,'zekr-list');
-
-// PWA Service Worker
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js')
-  .then(()=>console.log("Service Worker Registered"))
-  .catch(err=>console.log("Service Worker Failed:",err));
-}
 </script>
+
 <script src="pullRefresh.js"></script>
 
 </body>
 </html>
+
