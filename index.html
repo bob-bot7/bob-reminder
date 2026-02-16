@@ -437,24 +437,27 @@ const notifyToggle = document.getElementById("notifyToggle");
 window.OneSignal = window.OneSignal || [];
 OneSignal.push(function() {
 
+  // إعادة تهيئة الاشتراك من الصفر
+  function resetOneSignal() {
+    // إيقاف الاشتراك القديم
+    OneSignal.setSubscription(false);
+    // إزالة أي بيانات محلية
+    localStorage.removeItem("notifyToggle");
+    // إلغاء تسجيل أي Service Worker قديم
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let reg of registrations) reg.unregister();
+      });
+    }
+  }
+
+  resetOneSignal(); // استدعاء إعادة التهيئة
+
   // تهيئة OneSignal
   OneSignal.init({
-    appId: "0ecba46a-a45a-442f-a1ce-f89baf8b38aa",
-    notifyButton: { enable: false } // زر الافتراضي مش مطلوب
+    appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
+    notifyButton: { enable: false }
   });
-
-  // استرجاع حالة toggle من localStorage
-  const savedToggle = localStorage.getItem("notifyToggle");
-  if (savedToggle !== null) {
-    notifyToggle.checked = savedToggle === "true";
-    // مزامنة حالة الاشتراك الفعلية
-    OneSignal.setSubscription(notifyToggle.checked);
-  } else {
-    // لو أول مرة، ضبط toggle حسب حالة الاشتراك الحالية
-    OneSignal.isPushNotificationsEnabled(function(enabled) {
-      notifyToggle.checked = enabled;
-    });
-  }
 
   // دالة إرسال إشعار ترحيبي
   function sendWelcomeNotification() {
@@ -466,31 +469,38 @@ OneSignal.push(function() {
     );
   }
 
-  // حدث تغيير الاشتراك
-  OneSignal.on('subscriptionChange', function(isSubscribed) {
-    if (isSubscribed) sendWelcomeNotification();
+  // مزامنة toggle مع حالة الاشتراك
+  OneSignal.isPushNotificationsEnabled(function(enabled) {
+    notifyToggle.checked = enabled;
   });
 
   // حدث تغيير toggle من المستخدم
   notifyToggle.addEventListener("change", function() {
     if (notifyToggle.checked) {
-      // لو مفعل، اطلب إذن الإشعارات
+      // اطلب إذن الإشعارات
       OneSignal.showNativePrompt().then(() => {
         OneSignal.isPushNotificationsEnabled(function(enabled) {
           if (enabled) sendWelcomeNotification();
-          // حفظ الحالة
           localStorage.setItem("notifyToggle", enabled);
         });
       });
     } else {
-      // لو لغى الاشتراك
+      // لو المستخدم لغى الاشتراك
       OneSignal.setSubscription(false);
       localStorage.setItem("notifyToggle", false);
     }
   });
 
+  // متابعة أي تغيير خارجي للاشتراك
+  OneSignal.on('subscriptionChange', function(isSubscribed) {
+    notifyToggle.checked = isSubscribed;
+    if (isSubscribed) sendWelcomeNotification();
+    localStorage.setItem("notifyToggle", isSubscribed);
+  });
+
 });
 </script>
+
 
 
 </body>
