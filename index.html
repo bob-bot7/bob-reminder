@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
+      notifyButton: { enable: false }
+    });
+
+    // بعد ما يخلص init
+    const notifyToggle = document.getElementById("notifyToggle");
+
+    notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
+
+    notifyToggle.addEventListener("change", async function () {
+
+      if (notifyToggle.checked) {
+
+        const permission = await OneSignal.Notifications.requestPermission();
+
+        if (permission !== "granted") {
+          notifyToggle.checked = false;
+        }
+
+      } else {
+        await OneSignal.User.PushSubscription.optOut();
+      }
+
+    });
+
+  });
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
@@ -428,42 +461,6 @@ document.addEventListener('touchmove', e=>{
 </script>
 
 <script src="pullRefresh.js"></script>
-<!-- OneSignal SDK -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  const notifyToggle = document.getElementById("notifyToggle");
-
-  OneSignal.init({
-    appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
-    notifyButton: { enable: false }
-  }).then(() => {
-
-    // مزامنة حالة التوجل
-    notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
-
-    notifyToggle.addEventListener("change", function () {
-
-      if (notifyToggle.checked) {
-
-        OneSignal.Notifications.requestPermission().then(permission => {
-          if (permission !== "granted") {
-            notifyToggle.checked = false;
-          }
-        });
-
-      } else {
-        OneSignal.User.PushSubscription.optOut();
-      }
-
-    });
-
-  });
-
-});
-</script>
-
 </body>
 </html>
+
