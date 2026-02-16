@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>أذكار صباح ومساء - BOB Reminder</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0a0a">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-size:18px;
+  line-height:1.9;
+  font-family:'Amiri',serif;
+  background:gold;
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+  overflow-x:hidden;
+  touch-action: pan-y;
+} 
+.page-background{
+  position:fixed;
+  inset:0;
+  background:url("background000000.jpg") center/cover no-repeat;
+  filter:brightness(.7);
+  z-index:-1;
+}
+.content{
+  max-width:720px;
+  margin:auto;
+  text-align:center;
+}
+h2{
+  font-size:2.3em;
+  margin-bottom:20px;
+  background:linear-gradient(90deg,#daff08,#eeff00,#ffc400);
+  background-size:200%;
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gold 3s linear infinite;
+}
+@keyframes gold{to{background-position:200%}}
+.flip-buttons{
+  margin-bottom:25px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+}
+.flip-btn{
+  padding:10px 20px;
+  border:none;
+  border-radius:12px;
+  font-size:1em;
+  cursor:pointer;
+  background:linear-gradient(90deg,#FFD700,#FFB300);
+  color:#000;
+  box-shadow:0 0 10px gold;
+  transition:.3s;
+}
+.flip-btn.active{
+  background:linear-gradient(90deg,#00ffcc,#00cc99);
+  color:#000;
+  box-shadow:0 0 15px #00ffcc;
+}
+.flip-btn:hover{transform:scale(1.1);}
+.card{
+  background:rgba(56, 56, 56, 0.9);
+  border-radius:22px;
+  padding:20px;
+  margin:15px 0;
+  box-shadow:0 0 12px gold;
+  transition:.3s;
+}
+.card strong{
+  display:block;
+  font-size:1.3em;
+  color:gold;
+  margin-bottom:10px;
+}
+.card p{
+  color:#ddd;
+  font-size:1em;
+  margin:0 0 15px 0;
+  line-height:1.7;
+}
+.counter-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:10px;
+  gap:10px;
+}
+.zikr-btn{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  font-size:1em;
+  font-weight:bold;
+  border:none;
+  cursor:pointer;
+  color:#000;
+  background:linear-gradient(90deg,#FFD700,#FFB300);
+  box-shadow:0 0 10px gold;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.zikr-btn:hover{transform:scale(1.1);}
+.zikr.done .zikr-btn{
+  background:linear-gradient(90deg,#00ffcc,#00cc99);
+  box-shadow:0 0 20px #00ffcc;
+  color:#000;
+}
+.reset-btn{
+  font-size:1.5em;
+  background:none;
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+.reset-btn:hover{transform:scale(1.3);}
+a{
+  color:gold;
+  display:block;
+  text-align:center;
+  margin-top:30px;
+  text-decoration:none;
+  font-size:1.2em;
+}
+@media(max-width:480px){
+  h2{font-size:1.8em;}
+  .card strong{font-size:1.15em;}
+  .card p{font-size:1.05em;}
+  .zikr-btn{width:50px;height:50px;font-size:.9em;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-background"></div>
+<div class="content">
+<h2>أذكار الصباح والمساء</h2>
+
+<div class="flip-buttons">
+  <button class="flip-btn active" onclick="showMorning()">الصباح</button>
+  <button class="flip-btn" onclick="showEvening()">المساء</button>
+</div>
+
+<!-- الكروت -->
+ <div class="card zikr" data-id="zikr1" data-max="1" data-morning="اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَؤُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ" data-evening="اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَؤُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ">
+  <strong> آية الكرسي</strong>
+  <p> اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَؤُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr2" data-max="3" data-morning=" قُلْ هُوَ اللَّهُ أَحَدٌ
+اللَّهُ الصَّمَدُ
+لَمْ يَلِدْ وَلَمْ يُولَدْ
+وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ" data-evening="  قُلْ هُوَ اللَّهُ أَحَدٌ
+اللَّهُ الصَّمَدُ
+لَمْ يَلِدْ وَلَمْ يُولَدْ
+وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ">
+  <strong>سورة الإخلاص</strong>
+  <p> قُلْ هُوَ اللَّهُ أَحَدٌ
+اللَّهُ الصَّمَدُ
+لَمْ يَلِدْ وَلَمْ يُولَدْ
+وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr3" data-max="3" data-morning=" قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ
+مِن شَرِّ مَا خَلَقَ
+وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ
+وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ
+وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ" data-evening="  قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ
+مِن شَرِّ مَا خَلَقَ
+وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ
+وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ
+وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ">
+  <strong>سورة الفلق</strong>
+  <p> قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ
+مِن شَرِّ مَا خَلَقَ
+وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ
+وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ
+وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr4" data-max="3" data-morning=" قُلْ أَعُوذُ بِرَبِّ النَّاسِ
+مَلِكِ النَّاسِ
+إِلَٰهِ النَّاسِ
+مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ
+الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ
+مِنَ الْجِنَّةِ وَالنَّاسِ" data-evening=" قُلْ أَعُوذُ بِرَبِّ النَّاسِ
+مَلِكِ النَّاسِ
+إِلَٰهِ النَّاسِ
+مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ
+الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ
+مِنَ الْجِنَّةِ وَالنَّاسِ ">
+  <strong>سورة الناس</strong>
+  <p> قُلْ أَعُوذُ بِرَبِّ النَّاسِ
+مَلِكِ النَّاسِ
+إِلَٰهِ النَّاسِ
+مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ
+الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ
+مِنَ الْجِنَّةِ وَالنَّاسِ</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+<div class="card zikr" data-id="zikr5" data-max="1" data-morning=" أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير، ربِّ أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، ربِّ أعوذ بك من الكسل وسوء الكِبَر، ربِّ أعوذ بك من عذاب في النار وعذاب في القبر." data-evening=" أمسينا وأمسي الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير، ربِّ أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، ربِّ أعوذ بك من الكسل وسوء الكِبَر، ربِّ أعوذ بك من عذاب في النار وعذاب في القبر.">
+  <strong> الملك لله</strong>
+  <p> أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير، ربِّ أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، ربِّ أعوذ بك من الكسل وسوء الكِبَر، ربِّ أعوذ بك من عذاب في النار وعذاب في القبر.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr6" data-max="1" data-morning=" اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك النشور." data-evening=" اللهم بك أمسينا وبك أصبحنا وبك نحيا وبك نموت وإليك المصير.">
+  <strong>اللهم بك </strong>
+  <p> اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك النشور.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr7" data-max="1" data-morning="اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليَّ وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت." data-evening=" اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليَّ وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت.">
+  <strong>سيد الاستغفار</strong>
+  <p> اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليَّ وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr8" data-max="4" data-morning=" اللهم إني أصبحت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك." data-evening="  اللهم إني أمسيت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك.">
+  <strong>اللهم إني أصبحت أشهدك</strong>
+  <p>اللهم إني أصبحت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 4</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr9" data-max="4" data-morning="اللهم ما أصبح بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر." data-evening="اللهم ما أمسى بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.">
+  <strong>اللهم ما</strong>
+  <p>اللهم ما أصبح بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 4</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr10" data-max="3" data-morning=" اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت. اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت. " data-evening="اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت. اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أن">
+  <strong> اللهم عافني في بدني</strong>
+  <p> اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت. اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr11" data-max="1" data-morning="اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والبخل والجبن، وضلع الدين وغلبة الرجال" data-evening="اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والبخل والجبن، وضلع الدين وغلبة الرجال">
+  <strong>اللهم إني أعوذ بك من الهم والحزن </strong>
+  <p> اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والبخل والجبن، وضلع الدين وغلبة الرجال</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr12" data-max="4" data-morning="اللهم ما أصبح بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر." data-evening="اللهم ما أمسى بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.">
+  <strong>اللهم ما</strong>
+  <p>اللهم ما أصبح بي من نعمة أو بأحدٍ من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 4</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr13" data-max="7" data-morning="حسبي الله لا إله إلا هو عليه توكلت وهو رب العرش العظيم." data-evening="حسبي الله لا إله إلا هو عليه توكلت وهو رب العرش العظيم.">
+  <strong> حسبي الله لا إله إلا هو </strong>
+  <p> حسبي الله لا إله إلا هو عليه توكلت وهو رب العرش العظيم.</p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 7</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr14" data-max="3" data-morning="بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم." data-evening="بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم.">
+  <strong>  بسم الله الذي لا يضر  </strong>
+  <p> بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr15" data-max="3" data-morning=" رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا. " data-evening=" رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا. ">
+  <strong> رضيت بالله ربًا  </strong>
+  <p> رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr16" data-max="1" data-morning=" يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين. " data-evening=" يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين. ">
+  <strong>  يا حي يا قيوم  </strong>
+  <p>  يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr17" data-max="1" data-morning=" أصبحنا على فطرة الإسلام وعلى كلمة الإخلاص وعلى دين نبينا محمد ﷺ وعلى ملة أبينا إبراهيم حنيفًا مسلمًا وما كان من المشركين. " data-evening=" أمسينا على فطرة الإسلام وعلى كلمة الإخلاص وعلى دين نبينا محمد ﷺ وعلى ملة أبينا إبراهيم حنيفًا مسلمًا وما كان من المشركين.">
+  <strong>  فطرة الإسلام </strong>
+  <p>  أصبحنا على فطرة الإسلام وعلى كلمة الإخلاص وعلى دين نبينا محمد ﷺ وعلى ملة أبينا إبراهيم حنيفًا مسلمًا وما كان من المشركين.   </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr18" data-max="100" data-morning=" لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. " data-evening=" لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. ">
+  <strong>   لا إله إلا الله وحده لا شريك له  </strong>
+  <p>  لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 100</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr19" data-max="100" data-morning="سبحان الله وبحمده" data-evening="سبحان الله وبحمده">
+  <strong> سبحان الله وبحمده </strong>
+  <p> سبحان الله وبحمده </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 100</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr20" data-max="3" data-morning="    سبحان الله وبحمده عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته. " data-evening="  سبحان الله وبحمده عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته.  ">
+  <strong>سبحان الله وبحمده عدد خلقه </strong>
+  <p>سبحان الله وبحمده عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته.  </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+
+<div class="card zikr" data-id="zikr21" data-max="1" data-morning="  اللهم إني أسألك علمًا نافعًا، ورزقًا طيبًا، وعملًا متقبلًا." data-evening="  اللهم إني أسألك علمًا نافعًا، ورزقًا طيبًا، وعملًا متقبلًا. ">
+  <strong>  اللهم إني أسألك علمًا نافعًا </strong>
+  <p>   اللهم إني أسألك علمًا نافعًا، ورزقًا طيبًا، وعملًا متقبلًا. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 1</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr22" data-max="3" data-morning=" أعوذ بكلمات الله التامات من شر ما خلق." data-evening=" أعوذ بكلمات الله التامات من شر ما خلق.">
+  <strong>  أعوذ بكلمات الله التامات </strong>
+  <p> أعوذ بكلمات الله التامات من شر ما خلق.   </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 3</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr23" data-max="100" data-morning=" أستغفر الله وأتوب إليه." data-evening=" أستغفر الله وأتوب إليه.">
+  <strong> أستغفر الله </strong>
+  <p>  أستغفر الله وأتوب إليه. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 100</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<div class="card zikr" data-id="zikr24" data-max="10" data-morning=" اللهم صلِّ وسلم وبارك على نبينا محمد." data-evening=" اللهم صلِّ وسلم وبارك على نبينا محمد.">
+  <strong>  الصلاة على النبي ﷺ </strong>
+<p>   اللهم صلِّ وسلم وبارك على نبينا محمد. </p>
+  <div class="counter-container">
+    <button class="zikr-btn" onclick="add(this)">0 / 10</button>
+    <button class="reset-btn" onclick="resetZikr(this)">🔄</button>
+  </div>
+</div>
+
+<a href="index.html">العودة للرئيسية</a>
+</div>
+
+<script>
+// عدادات الأذكار
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.zikr').forEach(card => {
+    const id = card.dataset.id;
+    const btn = card.querySelector('.zikr-btn');
+    const saved = localStorage.getItem(id);
+    if(saved){
+      btn.dataset.count = saved;
+      btn.textContent = `${saved} / ${card.dataset.max}`;
+      if(parseInt(saved) >= parseInt(card.dataset.max)){
+        card.classList.add('done');
+      }
+    }
+  });
+});
+
+// وظائف العدادات
+function add(btn){
+  const card = btn.closest('.zikr');
+  const max = parseInt(card.dataset.max);
+  let count = parseInt(btn.dataset.count || 0);
+  if(count < max){
+    count++;
+    btn.dataset.count = count;
+    btn.textContent = `${count} / ${max}`;
+    localStorage.setItem(card.dataset.id, count);
+    if(count === max){card.classList.add('done');navigator.vibrate?.(100);}
+  }
+}
+function resetZikr(btn){
+  const card = btn.closest('.zikr');
+  const btnZikr = card.querySelector('.zikr-btn');
+  btnZikr.dataset.count = 0;
+  btnZikr.textContent = `0 / ${card.dataset.max}`;
+  card.classList.remove('done');
+  localStorage.setItem(card.dataset.id, 0);
+}
+
+// تغيير الصباح / المساء
+function showMorning(){
+  document.querySelectorAll('.card').forEach(card=>{
+    if(card.dataset.morning) card.querySelector('p').textContent = card.dataset.morning;
+  });
+  document.querySelectorAll('.flip-btn').forEach((b,i)=>b.classList.toggle('active', i===0));
+}
+function showEvening(){
+  document.querySelectorAll('.card').forEach(card=>{
+    if(card.dataset.evening) card.querySelector('p').textContent = card.dataset.evening;
+  });
+  document.querySelectorAll('.flip-btn').forEach((b,i)=>b.classList.toggle('active', i===1));
+}
+</script>
+<script src="pullRefresh.js"></script>
+</body>
+</html>
