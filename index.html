@@ -432,36 +432,38 @@ document.addEventListener('touchmove', e=>{
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
 
   const notifyToggle = document.getElementById("notifyToggle");
 
-  await OneSignal.init({
+  OneSignal.init({
     appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
     notifyButton: { enable: false }
-  });
+  }).then(() => {
 
-  notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
+    // مزامنة حالة التوجل
+    notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
 
-  notifyToggle.addEventListener("change", async function () {
+    notifyToggle.addEventListener("change", function () {
 
-    if (notifyToggle.checked) {
+      if (notifyToggle.checked) {
 
-      const permission = await OneSignal.Notifications.requestPermission();
+        OneSignal.Notifications.requestPermission().then(permission => {
+          if (permission !== "granted") {
+            notifyToggle.checked = false;
+          }
+        });
 
-      if (permission !== "granted") {
-        notifyToggle.checked = false;
+      } else {
+        OneSignal.User.PushSubscription.optOut();
       }
 
-    } else {
-      await OneSignal.User.PushSubscription.optOut();
-    }
+    });
 
   });
 
 });
 </script>
-
 
 </body>
 </html>
