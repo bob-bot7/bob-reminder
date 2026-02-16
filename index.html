@@ -433,69 +433,39 @@ document.addEventListener('touchmove', e=>{
 <script>
 const notifyToggle = document.getElementById("notifyToggle");
 
-// تأكد من OneSignal جاهز
 window.OneSignal = window.OneSignal || [];
-OneSignal.push(function() {
+OneSignal.push(async function() {
 
-  // إعادة تهيئة الاشتراك من الصفر
-  function resetOneSignal() {
-    // إيقاف الاشتراك القديم
-    OneSignal.setSubscription(false);
-    // إزالة أي بيانات محلية
-    localStorage.removeItem("notifyToggle");
-    // إلغاء تسجيل أي Service Worker قديم
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let reg of registrations) reg.unregister();
-      });
-    }
-  }
-
-  resetOneSignal(); // استدعاء إعادة التهيئة
-
-  // تهيئة OneSignal
-  OneSignal.init({
+  await OneSignal.init({
     appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
     notifyButton: { enable: false }
   });
 
-  // دالة إرسال إشعار ترحيبي
-  function sendWelcomeNotification() {
-    OneSignal.sendSelfNotification(
-      "مرحبًا 🌙",
-      "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
-      "https://bob-reminder.vercel.app",
-      { icon: "icon-192.png" }
-    );
-  }
+  // مزامنة حالة التوجل مع الاشتراك الفعلي
+  notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
 
-  // مزامنة toggle مع حالة الاشتراك
-  OneSignal.isPushNotificationsEnabled(function(enabled) {
-    notifyToggle.checked = enabled;
-  });
+  // لما المستخدم يغير التوجل
+  notifyToggle.addEventListener("change", async function() {
 
-  // حدث تغيير toggle من المستخدم
-  notifyToggle.addEventListener("change", function() {
     if (notifyToggle.checked) {
-      // اطلب إذن الإشعارات
-      OneSignal.showNativePrompt().then(() => {
-        OneSignal.isPushNotificationsEnabled(function(enabled) {
-          if (enabled) sendWelcomeNotification();
-          localStorage.setItem("notifyToggle", enabled);
-        });
-      });
-    } else {
-      // لو المستخدم لغى الاشتراك
-      OneSignal.setSubscription(false);
-      localStorage.setItem("notifyToggle", false);
-    }
-  });
 
-  // متابعة أي تغيير خارجي للاشتراك
-  OneSignal.on('subscriptionChange', function(isSubscribed) {
-    notifyToggle.checked = isSubscribed;
-    if (isSubscribed) sendWelcomeNotification();
-    localStorage.setItem("notifyToggle", isSubscribed);
+      // طلب إذن الإشعارات
+      await OneSignal.Notifications.requestPermission();
+
+      if (OneSignal.User.PushSubscription.optedIn) {
+        // إشعار ترحيبي
+        OneSignal.Notifications.show("مرحبًا 🌙", {
+          body: "نسأل اللّٰه أن يجعل يومك طمأنينة وذكراً وقربًا منه.",
+          icon: "icon-192.png"
+        });
+      } else {
+        notifyToggle.checked = false;
+      }
+
+    } else {
+      await OneSignal.User.PushSubscription.optOut();
+    }
+
   });
 
 });
