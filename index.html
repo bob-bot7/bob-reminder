@@ -117,14 +117,7 @@ h1 {
   box-shadow: 0 0 20px #FFD700,0 0 40px #FFB300;
   cursor:pointer;
 }
-.notify-label,.notify-label {
-  font-size: 0.8em;
-  color: #fff;
-  text-align: center;
-  max-width: 140px;
-  margin-top: 3px;
-}
- .share-label { color:#e5ff00; font-size:0.9em; margin-top:5px; }
+.notify-label,.share-label { color:#e5ff00; font-size:0.9em; margin-top:5px; }
 
 .cards-container {
   position: relative; z-index:10;
@@ -234,15 +227,15 @@ input:checked + .slider:before {
 <!-- زر Notifications و Toggle + زر الدايرة + زر Share -->
 <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-top:20px; z-index:10; position:relative;">
 
-  <!-- Notifications الشكل فقط + Toggle -->
-<div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-  <div class="notify-btn">🔔</div>
-  <label class="switch">
-    <input type="checkbox" id="notifyToggle">
-    <span class="slider"></span>
-  </label>
-  <div class="notify-label">Add website to home screen to enable notifications</div>
-</div>
+!-- Notifications الشكل فقط + Toggle -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+    <div class="notify-btn">🔔</div>
+    <div class="notify-label">Notifications</div>
+    <label class="switch">
+      <input type="checkbox" id="notifyToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
 
 
   <!-- زر الدايرة الكبير -->
@@ -477,9 +470,16 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
+  
+<script>
+window.addEventListener('load', () => {
+  alert("Add website to home screen to allow notifications");
+});
+</script>
 
 </body>
 </html>
+
 
 
 
