@@ -467,6 +467,7 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
+  <script>
  window.addEventListener('load', () => {
   // تحقق إذا المستخدم شاف الـ alert قبل كده
   if (!localStorage.getItem('seenHomeScreenAlert')) {
@@ -489,9 +490,10 @@ OneSignalDeferred.push(async function(OneSignal) {
     localStorage.setItem('seenHomeScreenAlert', 'true');
   }
 });
-
+</script>
 </body>
 </html>
+
 
 
 
