@@ -467,50 +467,6 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
-<style>
-/* ستايل للـ div الذكي */
-#smartAlert {
-  display: none; /* مخفي افتراضياً */
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: gold;
-  color: black;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  z-index: 9999;
-  max-width: 90%;
-  font-family: 'Cairo', sans-serif;
-}
-#smartAlert button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  border: none;
-  background: black;
-  color: gold;
-  border-radius: 8px;
-  cursor: pointer;
-}
-</style>
-
-<div id="smartAlert">
-  📱 For iPhone & Android users:<br>
-  ⚠️ Important: How to allow notifications 🔔<br>
-  Step 1: Tap the three dots (⋮) or share icon.<br>
-  Step 2: Open in external browser (Safari users).<br>
-  Step 3: Tap 'Share'.<br>
-  Step 4: Tap 'Add to Home Screen'.<br><br>
-  📱 لمستخدمي iPhone و Android:<br>
-  ⚠️ مهم: كيفية السماح بالإشعارات 🔔<br>
-  الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.<br>
-  الخطوة 2: افتح الصفحة في المتصفح (لمستخدمي Safari افتح في Safari).<br>
-  الخطوة 3: اضغط 'مشاركة'.<br>
-  الخطوة 4: اضغط 'إضافة إلى الشاشة الرئيسية'.<br>
-  <button onclick="document.getElementById('smartAlert').style.display='none'">شفت وفهمت</button>
-</div>
-
 <script>
 window.addEventListener('load', () => {
   // كشف اذا المستخدم فتح الموقع من Home Screen
@@ -546,6 +502,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
