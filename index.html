@@ -128,10 +128,12 @@ h1 {
   position:relative; height:150px; border-radius:15px;
   display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
   padding-bottom:10px; text-decoration:none; overflow:hidden;
-  pointer-events: none; background-size: cover; background-position: center;
+  pointer-events: none;   opacity:0;
+  transform: scale(0.5); background-size: cover; background-position: center;
   transition: all 0.5s ease; filter: brightness(0.9);
 }
-.card.show { pointer-events: auto; animation: pulseCard 2s infinite alternate; }
+.card.show { pointer-events: auto;   opacity:1;
+  transform: scale(1); animation: pulseCard 2s infinite alternate; }
 @keyframes pulseCard { 0% { box-shadow:0 0 5px #FFD700,0 0 15px #FFB300; } 50% { box-shadow:0 0 15px #FFD700,0 0 30px #FFB300; } 100% { box-shadow:0 0 5px #FFD700,0 0 15px #FFB300; } }
 .card:hover { transform: scale(1.05); }
 .card-title { font-weight:bold; font-size:1.2em; color:#FFD700; text-shadow:0 0 5px #000; }
@@ -446,24 +448,29 @@ OneSignalDeferred.push(async function(OneSignal) {
   const notifyToggle = document.getElementById("notifyToggle");
   if (!notifyToggle) return;
 
-  function updateToggle() {
+  function syncToggle() {
     notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
   }
 
-  // تحديث الحالة أول ما الصفحة تفتح
-  updateToggle();
+  syncToggle();
 
-  // تحديث لو الحالة اتغيرت
-  OneSignal.User.PushSubscription.addEventListener("change", function() {
-    updateToggle();
-  });
+  OneSignal.User.PushSubscription.addEventListener("change", syncToggle);
 
   notifyToggle.addEventListener("change", async function () {
 
     if (notifyToggle.checked) {
+
       const permission = await OneSignal.Notifications.requestPermission();
 
-      if (permission !== "granted") {
+      if (permission === "granted") {
+
+        await OneSignal.Notifications.showNativeNotification({
+          title: "BoB Reminder 🤍",
+          body: "نسأل الله أن يجعل يومك قُربًا منه 🌙",
+          icon: "bob.jpg"
+        });
+
+      } else {
         notifyToggle.checked = false;
       }
 
@@ -478,7 +485,6 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 </body>
 </html>
-
 
 
 
