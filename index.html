@@ -446,9 +446,9 @@ window.OneSignalDeferred = window.OneSignalDeferred || [];
 OneSignalDeferred.push(async function(OneSignal) {
 
   const notifyToggle = document.getElementById("notifyToggle");
+
   if (!notifyToggle) return;
 
-  // مزامنة الحالة عند التحميل
   notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
 
   notifyToggle.addEventListener("change", async function () {
@@ -457,15 +457,7 @@ OneSignalDeferred.push(async function(OneSignal) {
 
       const permission = await OneSignal.Notifications.requestPermission();
 
-      if (permission === "granted") {
-
-        // نوتيفيكيشن ترحيبي فوري
-        new Notification("BoB Reminder 🤍", {
-          body: "نسأل الله أن يجعل يومك قُربًا منه 🌙",
-          icon: "bob.jpg"
-        });
-
-      } else {
+      if (permission !== "granted") {
         notifyToggle.checked = false;
       }
 
@@ -480,6 +472,7 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 </body>
 </html>
+
 
 
 
