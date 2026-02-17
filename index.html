@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -467,27 +470,46 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
- <script>
+<script>
 window.addEventListener('load', () => {
-  alert(
-    "📱 For iPhone & Android users:\n\n" +
-    "⚠️ Important: How to allow notifications 🔔\n\n" +
-    "Step 1: Tap the three dots (⋮) or share icon.\n" +
-    "Step 2: Open in external browser (Safari users).\n" +
-    "Step 3: Tap 'Share'.\n" +
-    "Step 4: Tap 'Add to Home Screen'.\n\n" +
-    "📱 لمستخدمي iPhone و Android:\n\n" +
-    "⚠️ مهم: كيفية السماح بالإشعارات 🔔\n\n" +
-     "الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.\n" +
-    "الخطوة 2: افتح الصفحة في المتصفح (لمستخدمي Safari افتح في Safari).\n" +
-    "الخطوة 3: اضغط 'مشاركة'.\n" +
-    "الخطوة 4: اضغط 'إضافة إلى الشاشة الرئيسية'."
-  );
+
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (!isStandalone) {
+    alert(
+      "📱 For iPhone & Android users:\n\n" +
+      "⚠️ Important: How to allow notifications 🔔\n\n" +
+      "Step 1: Tap the three dots (⋮) or share icon.\n" +
+      "Step 2: Open in external browser (Safari users).\n" +
+      "Step 3: Tap 'Share'.\n" +
+      "Step 4: Tap 'Add to Home Screen'.\n\n" +
+      "📱 لمستخدمي iPhone و Android:\n\n" +
+      "⚠️ مهم: كيفية السماح بالإشعارات 🔔\n\n" +
+      "الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.\n" +
+      "الخطوة 2: افتح الصفحة في المتصفح.\n" +
+      "الخطوة 3: اضغط مشاركة.\n" +
+      "الخطوة 4: إضافة إلى الشاشة الرئيسية."
+    );
+  }
+
 });
 </script>
 
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 
 
