@@ -467,32 +467,86 @@ OneSignalDeferred.push(async function(OneSignal) {
 
 });
 </script>
-  <script>
- window.addEventListener('load', () => {
-  // تحقق إذا المستخدم شاف الـ alert قبل كده
-  if (!localStorage.getItem('seenHomeScreenAlert')) {
-    alert(
-      "📱 For iPhone & Android users:\n\n" +
-      "⚠️ Important: How to allow notifications 🔔\n\n" +
-      "Step 1: Tap the three dots (⋮) or share icon.\n" +
-      "Step 2: Open in external browser (Safari users).\n" +
-      "Step 3: Tap 'Share'.\n" +
-      "Step 4: Tap 'Add to Home Screen'.\n\n" +
-      "📱 لمستخدمي iPhone و Android:\n\n" +
-      "⚠️ مهم: كيفية السماح بالإشعارات 🔔\n\n" +
-       "الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.\n" +
-      "الخطوة 2: افتح الصفحة في المتصفح (لمستخدمي Safari افتح في Safari).\n" +
-      "الخطوة 3: اضغط 'مشاركة'.\n" +
-      "الخطوة 4: اضغط 'إضافة إلى الشاشة الرئيسية'."
-    );
+<style>
+/* ستايل للـ div الذكي */
+#smartAlert {
+  display: none; /* مخفي افتراضياً */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: gold;
+  color: black;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 9999;
+  max-width: 90%;
+  font-family: 'Cairo', sans-serif;
+}
+#smartAlert button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  background: black;
+  color: gold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
 
-    // علم أن المستخدم شاف الـ alert عشان ما يظهرش تاني
-    localStorage.setItem('seenHomeScreenAlert', 'true');
+<div id="smartAlert">
+  📱 For iPhone & Android users:<br>
+  ⚠️ Important: How to allow notifications 🔔<br>
+  Step 1: Tap the three dots (⋮) or share icon.<br>
+  Step 2: Open in external browser (Safari users).<br>
+  Step 3: Tap 'Share'.<br>
+  Step 4: Tap 'Add to Home Screen'.<br><br>
+  📱 لمستخدمي iPhone و Android:<br>
+  ⚠️ مهم: كيفية السماح بالإشعارات 🔔<br>
+  الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.<br>
+  الخطوة 2: افتح الصفحة في المتصفح (لمستخدمي Safari افتح في Safari).<br>
+  الخطوة 3: اضغط 'مشاركة'.<br>
+  الخطوة 4: اضغط 'إضافة إلى الشاشة الرئيسية'.<br>
+  <button onclick="document.getElementById('smartAlert').style.display='none'">شفت وفهمت</button>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  // كشف اذا المستخدم فتح الموقع من Home Screen
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  if (!isInStandaloneMode) {
+    // تصرف ذكي: Safari على iPhone أحياناً يمنع alert()
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isSafari) {
+      // أظهر div بديل للـ alert
+      document.getElementById('smartAlert').style.display = 'block';
+    } else {
+      // أظهر alert التقليدي للتطبيقات الداخلية (واتس/إنستا) أو Chrome/Firefox
+      alert(
+        "📱 For iPhone & Android users:\n\n" +
+        "⚠️ Important: How to allow notifications 🔔\n\n" +
+        "Step 1: Tap the three dots (⋮) or share icon.\n" +
+        "Step 2: Open in external browser (Safari users).\n" +
+        "Step 3: Tap 'Share'.\n" +
+        "Step 4: Tap 'Add to Home Screen'.\n\n" +
+        "📱 لمستخدمي iPhone و Android:\n\n" +
+        "⚠️ مهم: كيفية السماح بالإشعارات 🔔\n\n" +
+        "الخطوة 1: اضغط الثلاث نقاط (⋮) أو أيقونة المشاركة.\n" +
+        "الخطوة 2: افتح الصفحة في المتصفح (لمستخدمي Safari افتح في Safari).\n" +
+        "الخطوة 3: اضغط 'مشاركة'.\n" +
+        "الخطوة 4: اضغط 'إضافة إلى الشاشة الرئيسية'."
+      );
+    }
   }
 });
 </script>
+
 </body>
 </html>
+
 
 
 
