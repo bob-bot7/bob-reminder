@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
- <!-- OneSignal SDK -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
 window.OneSignal = window.OneSignal || [];
-
 OneSignal.push(function() {
   OneSignal.init({
     appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
-    notifyButton: { enable: true }, // Bell يظهر
+    notifyButton: { enable: true },
     allowLocalhostAsSecureOrigin: true
   });
 });
 
-// عناصر الصفحة
+// العناصر
 const notifyToggle = document.getElementById("notifyToggle");
-const bell = document.querySelector(".notify-btn"); // Bell
-const STORAGE_KEY = "notifyStatus";
+const bell = document.querySelector(".notify-btn");
 
-// تحديث Toggle وBell حسب حالة الاشتراك
-async function syncNotificationUI() {
+// دالة لتحديث Toggle والBell حسب حالة الاشتراك الحقيقية
+async function updateNotificationUI() {
   try {
     const subscription = await OneSignal.User.pushSubscription.get();
-    const optedIn = subscription?.optedIn || false;
-
-    notifyToggle.checked = optedIn;
-    localStorage.setItem(STORAGE_KEY, optedIn ? "true" : "false");
-    bell.style.opacity = optedIn ? "1" : "0.5"; // Bell مضيئة لو مشترك
-  } catch(e) {
+    const isSubscribed = subscription?.optedIn || false;
+    notifyToggle.checked = isSubscribed;
+    if (isSubscribed) {
+      bell.style.opacity = 1;
+      bell.style.transform = "scale(1.1)";
+    } else {
+      bell.style.opacity = 0.5;
+      bell.style.transform = "scale(1)";
+    }
+  } catch (e) {
     console.log("OneSignal sync error:", e);
-    notifyToggle.checked = localStorage.getItem(STORAGE_KEY) === "true";
-    bell.style.opacity = notifyToggle.checked ? "1" : "0.5";
+    notifyToggle.checked = false;
+    bell.style.opacity = 0.5;
   }
 }
 
-// الضغط على Toggle
-notifyToggle.addEventListener("change", async () => {
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
+// التعامل مع toggle
+notifyToggle.addEventListener("change", async function() {
   if (notifyToggle.checked) {
-    if (isIOS && isStandalone) {
-      // iOS PWA لا يدعم Allow
-      alert("⚠️ إشعارات PWA على iOS غير مدعومة في Add to Home Screen.\nافتح الموقع في Safari للحصول على إشعارات.");
-      notifyToggle.checked = false;
-      return;
-    }
     try {
-      await OneSignal.Slidedown.promptPush(); // يظهر Allow
-    } catch(e) {
+      await OneSignal.Slidedown.promptPush(); // يطلب الإذن من المستخدم
+    } catch(e){
       console.log("طلب الإذن فشل:", e);
       notifyToggle.checked = false;
     }
   } else {
     try {
-      await OneSignal.User.pushSubscription.optOut(); // إلغاء الاشتراك
-    } catch(e) {
+      await OneSignal.User.pushSubscription.optOut(); // يلغي الاشتراك فورًا
+    } catch(e){
       console.log("إلغاء الاشتراك فشل:", e);
     }
   }
-
-  await syncNotificationUI(); // تحديث Bell + Toggle بعد كل عملية
+  await updateNotificationUI();
 });
 
-// أول ما الصفحة تفتح
+// عند تحميل الصفحة
 window.addEventListener("load", async () => {
-  await syncNotificationUI();
+  await updateNotificationUI();
+
+  // كشف iOS PWA
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isIOS && isStandalone){
+    console.log("⚠️ إشعارات PWA غير مدعومة على iOS. المستخدم يرى إشعار نصي بدلها.");
+    notifyToggle.disabled = true;
+    bell.style.opacity = 0.5;
+  }
 });
 </script>
- 
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
@@ -534,6 +532,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
