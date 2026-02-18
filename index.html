@@ -4,16 +4,20 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+ 
+<!-- OneSignal SDK -->
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
 <script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
-      notifyButton: { enable: false }
-    });
+window.OneSignal = window.OneSignal || [];
+OneSignal.push(function() {
+  OneSignal.init({
+    appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
+    notifyButton: { enable: true }, // مهم جداً
+    allowLocalhostAsSecureOrigin: true
   });
-</script>
+});
+</script> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoB Reminder</title>
@@ -441,56 +445,53 @@ document.addEventListener('touchmove', e=>{
 </script>
 
 <script src="pullRefresh.js"></script>
+
 <script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
+const notifyToggle = document.getElementById("notifyToggle");
 
-OneSignalDeferred.push(async function(OneSignal) {
-  const notifyToggle = document.getElementById("notifyToggle");
-  if (!notifyToggle) return;
+async function updateToggle() {
+  try {
+    const subscription = await OneSignal.User.pushSubscription.get();
+    notifyToggle.checked = subscription?.optedIn || false;
+  } catch(e) {
+    console.log("OneSignal sync error:", e);
+    notifyToggle.checked = false;
+  }
+}
 
-  // تحديث حالة toggle حسب الاشتراك الحقيقي
-  async function syncToggle() {
+// أول ما الصفحة تفتح
+window.addEventListener("load", async () => {
+  await updateToggle();
+
+  // كشف iOS PWA (غير مدعوم)
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(isIOS && isStandalone){
+    alert("⚠️ إشعارات PWA غير مدعومة على iOS. افتح الموقع في Safari لإضافة إشعارات.");
+  }
+});
+
+// التعامل مع toggle
+notifyToggle.addEventListener("change", async function(){
+  if(notifyToggle.checked){
     try {
-      const subscription = await OneSignal.getSubscription();
-      notifyToggle.checked = subscription;
-    } catch(e) {
-      console.log("OneSignal sync error:", e);
+      await OneSignal.Slidedown.promptPush();
+    } catch(e){
+      console.log("طلب الإذن فشل:", e);
       notifyToggle.checked = false;
     }
-  }
-
-  // تحديث أول مرة
-  await syncToggle();
-
-  // لما المستخدم يغير toggle
-  notifyToggle.addEventListener("change", async function () {
-    if (notifyToggle.checked) {
-      // اطلب الإذن
-      try {
-        const permission = await Notification.requestPermission();
-        if(permission === "granted") {
-          await OneSignal.registerForPushNotifications();
-        } else {
-          notifyToggle.checked = false;
-          alert("الإشعارات لم يتم السماح بها.");
-        }
-      } catch(e) {
-        console.log("Register failed:", e);
-        notifyToggle.checked = false;
-      }
-    } else {
-      // إلغاء الاشتراك
-      try {
-        await OneSignal.setSubscription(false);
-      } catch(e) {
-        console.log("OptOut failed:", e);
-      }
+  } else {
+    try {
+      await OneSignal.User.pushSubscription.optOut();
+    } catch(e){
+      console.log("إلغاء الاشتراك فشل:", e);
     }
-    // مزامنة الحالة
-    await syncToggle();
-  });
+  }
+  await updateToggle();
 });
 </script>
+
+
 <script>
 window.addEventListener('load', () => {
 
@@ -521,6 +522,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
