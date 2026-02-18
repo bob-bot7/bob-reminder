@@ -445,48 +445,50 @@ document.addEventListener('touchmove', e=>{
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 
 OneSignalDeferred.push(async function(OneSignal) {
-
   const notifyToggle = document.getElementById("notifyToggle");
   if (!notifyToggle) return;
 
-  // دالة مزامنة التوجل مع حالة الاشتراك الحقيقية
+  // تحديث حالة toggle حسب الاشتراك الحقيقي
   async function syncToggle() {
     try {
-      // جلب حالة الاشتراك الفعلية من OneSignal
-      const subscription = await OneSignal.User.PushSubscription.get();
-      notifyToggle.checked = subscription?.optedIn || false;
+      const subscription = await OneSignal.getSubscription();
+      notifyToggle.checked = subscription;
     } catch(e) {
       console.log("OneSignal sync error:", e);
       notifyToggle.checked = false;
     }
   }
 
-  // أول ما الصفحة تعمل init، حدث التوجل
+  // تحديث أول مرة
   await syncToggle();
 
-  // عند تغيير المستخدم للتوجل
+  // لما المستخدم يغير toggle
   notifyToggle.addEventListener("change", async function () {
     if (notifyToggle.checked) {
+      // اطلب الإذن
       try {
-        // طلب الإذن بشكل رسمي عبر Slidedown
-        await OneSignal.Slidedown.promptPush();
+        const permission = await Notification.requestPermission();
+        if(permission === "granted") {
+          await OneSignal.registerForPushNotifications();
+        } else {
+          notifyToggle.checked = false;
+          alert("الإشعارات لم يتم السماح بها.");
+        }
       } catch(e) {
-        console.log("Permission request failed:", e);
+        console.log("Register failed:", e);
         notifyToggle.checked = false;
       }
     } else {
+      // إلغاء الاشتراك
       try {
-        // إلغاء الاشتراك
-        await OneSignal.User.PushSubscription.optOut();
+        await OneSignal.setSubscription(false);
       } catch(e) {
         console.log("OptOut failed:", e);
       }
     }
-
-    // بعد أي عملية، نحدث التوجل ليعكس الحالة الحقيقية
+    // مزامنة الحالة
     await syncToggle();
   });
-
 });
 </script>
 <script>
@@ -519,6 +521,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
