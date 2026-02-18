@@ -1,72 +1,14 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-window.OneSignal = window.OneSignal || [];
-OneSignal.push(function() {
-  OneSignal.init({
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function(OneSignal) {
+  await OneSignal.init({
     appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
-    notifyButton: { enable: true },
-    allowLocalhostAsSecureOrigin: true
+    notifyButton: { enable: false }
   });
-});
-
-// العناصر
-const notifyToggle = document.getElementById("notifyToggle");
-const bell = document.querySelector(".notify-btn");
-
-// دالة لتحديث Toggle والBell حسب حالة الاشتراك الحقيقية
-async function updateNotificationUI() {
-  try {
-    const subscription = await OneSignal.User.pushSubscription.get();
-    const isSubscribed = subscription?.optedIn || false;
-    notifyToggle.checked = isSubscribed;
-    if (isSubscribed) {
-      bell.style.opacity = 1;
-      bell.style.transform = "scale(1.1)";
-    } else {
-      bell.style.opacity = 0.5;
-      bell.style.transform = "scale(1)";
-    }
-  } catch (e) {
-    console.log("OneSignal sync error:", e);
-    notifyToggle.checked = false;
-    bell.style.opacity = 0.5;
-  }
-}
-
-// التعامل مع toggle
-notifyToggle.addEventListener("change", async function() {
-  if (notifyToggle.checked) {
-    try {
-      await OneSignal.Slidedown.promptPush(); // يطلب الإذن من المستخدم
-    } catch(e){
-      console.log("طلب الإذن فشل:", e);
-      notifyToggle.checked = false;
-    }
-  } else {
-    try {
-      await OneSignal.User.pushSubscription.optOut(); // يلغي الاشتراك فورًا
-    } catch(e){
-      console.log("إلغاء الاشتراك فشل:", e);
-    }
-  }
-  await updateNotificationUI();
-});
-
-// عند تحميل الصفحة
-window.addEventListener("load", async () => {
-  await updateNotificationUI();
-
-  // كشف iOS PWA
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  if (isIOS && isStandalone){
-    console.log("⚠️ إشعارات PWA غير مدعومة على iOS. المستخدم يرى إشعار نصي بدلها.");
-    notifyToggle.disabled = true;
-    bell.style.opacity = 0.5;
-  }
 });
 </script>
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
@@ -500,7 +442,63 @@ document.addEventListener('touchmove', e=>{
 
 <script src="pullRefresh.js"></script>
 
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
 
+OneSignalDeferred.push(async function(OneSignal) {
+  const notifyToggle = document.getElementById("notifyToggle");
+  const notifyBell = document.querySelector(".notify-btn");
+
+  if(!notifyToggle || !notifyBell) return;
+
+  // دالة لتحديث حالة toggle & bell
+  async function syncToggle() {
+    const sub = await OneSignal.User.pushSubscription.get();
+    const optedIn = sub?.optedIn || false;
+    notifyToggle.checked = optedIn;
+    notifyBell.style.opacity = optedIn ? "1" : "0.5";
+  }
+
+  // أول ما الصفحة تفتح
+  await syncToggle();
+
+  // تزامن toggle مع OneSignal
+  notifyToggle.addEventListener("change", async () => {
+    if(notifyToggle.checked){
+      try {
+        const permission = await OneSignal.Notifications.requestPermission();
+        if(permission === "granted") await OneSignal.User.pushSubscription.register();
+        else notifyToggle.checked = false;
+      } catch(e){ console.log(e); notifyToggle.checked=false; }
+    } else {
+      await OneSignal.User.pushSubscription.optOut();
+    }
+    await syncToggle();
+  });
+
+  // bell كزر سريع لتفعيل الإشعارات
+  notifyBell.addEventListener("click", async () => {
+    if(!notifyToggle.checked){
+      try {
+        const permission = await OneSignal.Notifications.requestPermission();
+        if(permission === "granted") await OneSignal.User.pushSubscription.register();
+      } catch(e){ console.log(e); }
+      await syncToggle();
+    }
+  });
+
+  // تحقق كل مرة المستخدم يفتح الصفحة (focus)
+  window.addEventListener("focus", syncToggle);
+
+  // iOS PWA: غير ممكن الاشتراك مباشرة، بس نخلي bell & toggle باهتة
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(isIOS && isStandalone){
+    notifyToggle.disabled = true;
+    notifyBell.style.opacity = "0.5";
+  }
+});
+</script>
 
 <script>
 window.addEventListener('load', () => {
@@ -532,6 +530,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
