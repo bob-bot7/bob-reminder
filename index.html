@@ -441,7 +441,7 @@ document.addEventListener('touchmove', e=>{
 </script>
 
 <script src="pullRefresh.js"></script>
-  <script>
+<script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 
 OneSignalDeferred.push(async function(OneSignal) {
@@ -449,29 +449,42 @@ OneSignalDeferred.push(async function(OneSignal) {
   const notifyToggle = document.getElementById("notifyToggle");
   if (!notifyToggle) return;
 
-  // وظيفة مزامنة التوجل مع حالة الاشتراك
+  // دالة مزامنة التوجل مع حالة الاشتراك
   async function syncToggle() {
-    const optedIn = await OneSignal.User.PushSubscription.optedIn;
-    notifyToggle.checked = optedIn;
+    try {
+      const subscription = await OneSignal.User.PushSubscription.get();
+      notifyToggle.checked = subscription?.optedIn || false;
+    } catch(e) {
+      console.log("OneSignal sync error:", e);
+      notifyToggle.checked = false;
+    }
   }
 
-  // أول ما الصفحة تعمل init، نحدث حالة التوجل
+  // أول ما الصفحة تعمل init، حدث التوجل
   await syncToggle();
 
-  // حدث toggle لما المستخدم يضغط
+  // لما المستخدم يضغط على toggle
   notifyToggle.addEventListener("change", async function () {
 
     if (notifyToggle.checked) {
-      // نطلب الاشتراك فعليًا عبر Slidedown
-      await OneSignal.Slidedown.promptPush();
+      try {
+        // طلب الإذن بشكل صحيح
+        await OneSignal.Slidedown.promptPush();
+      } catch(e) {
+        console.log("Permission error:", e);
+        notifyToggle.checked = false;
+      }
     } else {
-      // نلغي الاشتراك
-      await OneSignal.User.PushSubscription.optOut();
+      // إلغاء الاشتراك
+      try {
+        await OneSignal.User.PushSubscription.optOut();
+      } catch(e) {
+        console.log("OptOut error:", e);
+      }
     }
 
-    // بعد كل عملية، نحدث التوجل ليعكس الحالة الحقيقية
+    // حدث التوجل بعد كل عملية
     await syncToggle();
-
   });
 
 });
@@ -506,6 +519,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
