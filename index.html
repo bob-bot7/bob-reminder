@@ -441,30 +441,36 @@ document.addEventListener('touchmove', e=>{
 </script>
 
 <script src="pullRefresh.js"></script>
-<script>
+  <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 
 OneSignalDeferred.push(async function(OneSignal) {
 
   const notifyToggle = document.getElementById("notifyToggle");
-
   if (!notifyToggle) return;
 
-  notifyToggle.checked = OneSignal.User.PushSubscription.optedIn;
+  // وظيفة مزامنة التوجل مع حالة الاشتراك
+  async function syncToggle() {
+    const optedIn = await OneSignal.User.PushSubscription.optedIn;
+    notifyToggle.checked = optedIn;
+  }
 
+  // أول ما الصفحة تعمل init، نحدث حالة التوجل
+  await syncToggle();
+
+  // حدث toggle لما المستخدم يضغط
   notifyToggle.addEventListener("change", async function () {
 
     if (notifyToggle.checked) {
-
-      const permission = await OneSignal.Notifications.requestPermission();
-
-      if (permission !== "granted") {
-        notifyToggle.checked = false;
-      }
-
+      // نطلب الاشتراك فعليًا عبر Slidedown
+      await OneSignal.Slidedown.promptPush();
     } else {
+      // نلغي الاشتراك
       await OneSignal.User.PushSubscription.optOut();
     }
+
+    // بعد كل عملية، نحدث التوجل ليعكس الحالة الحقيقية
+    await syncToggle();
 
   });
 
@@ -500,6 +506,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
