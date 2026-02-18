@@ -441,93 +441,34 @@ document.addEventListener('touchmove', e=>{
 </script>
 
 <script src="pullRefresh.js"></script>
-
 <script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-
 OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a",
-    notifyButton: { enable: false },
-  });
 
   const notifyToggle = document.getElementById("notifyToggle");
-  const notifyBtn = document.querySelector(".notify-btn");
-
   if (!notifyToggle) return;
 
-  // دالة لمزامنة toggle مع حالة الاشتراك الحقيقية
-  async function syncToggle() {
-    try {
-      const subscription = await OneSignal.User.pushSubscription.get();
-      notifyToggle.checked = subscription?.optedIn || false;
-    } catch (e) {
-      console.log("Sync error:", e);
-      notifyToggle.checked = false;
-    }
-  }
+  // استنى الحالة الحقيقية
+  const optedIn = await OneSignal.User.PushSubscription.optedIn;
 
-  // أول ما الصفحة تفتح
-  await syncToggle();
+  notifyToggle.checked = optedIn;
 
-  // التعامل مع toggle
   notifyToggle.addEventListener("change", async function () {
+
     if (notifyToggle.checked) {
-      try {
-        const permission = await OneSignal.Notifications.requestPermission();
-        if (permission === "granted") {
-          await OneSignal.User.pushSubscription.register();
-          console.log("✅ Notifications enabled");
-        } else {
-          notifyToggle.checked = false;
-        }
-      } catch (e) {
-        console.log("Failed to enable:", e);
+
+      const permission = await OneSignal.Notifications.requestPermission();
+
+      if (permission !== "granted") {
         notifyToggle.checked = false;
       }
+
     } else {
-      try {
-        await OneSignal.User.pushSubscription.optOut();
-        console.log("❌ Notifications disabled");
-      } catch (e) {
-        console.log("Failed to opt-out:", e);
-        notifyToggle.checked = true;
-      }
+      await OneSignal.User.PushSubscription.optOut();
+      notifyToggle.checked = false;
     }
+
   });
 
-  // bell يشتغل زي toggle
-  notifyBtn.addEventListener("click", () => notifyToggle.click());
-
-  // إعادة مزامنة تلقائية كل 10 ثواني للتأكد من أن toggle صحيح
-  setInterval(syncToggle, 10000);
-
-  // ---- iOS PWA: in-app daily notification ----
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  const today = new Date().toDateString();
-  const lastShown = localStorage.getItem("iosDailyNotify");
-
-  if (isIOS && isStandalone && lastShown !== today) {
-    // محاكاة إشعار داخل التطبيق
-    const inAppNotify = document.createElement("div");
-    inAppNotify.innerText = "🔔 تذكير اليوم!";
-    inAppNotify.style.position = "fixed";
-    inAppNotify.style.bottom = "100px";
-    inAppNotify.style.left = "50%";
-    inAppNotify.style.transform = "translateX(-50%)";
-    inAppNotify.style.padding = "12px 20px";
-    inAppNotify.style.background = "#FFD700";
-    inAppNotify.style.color = "#000";
-    inAppNotify.style.borderRadius = "12px";
-    inAppNotify.style.boxShadow = "0 0 20px #FFB300";
-    inAppNotify.style.fontWeight = "bold";
-    inAppNotify.style.zIndex = "9999";
-    document.body.appendChild(inAppNotify);
-
-    setTimeout(() => inAppNotify.remove(), 5000);
-    localStorage.setItem("iosDailyNotify", today);
-  }
 });
 </script>
 <script>
@@ -560,6 +501,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
