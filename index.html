@@ -448,33 +448,53 @@ document.addEventListener('touchmove', e=>{
 
 <script>
 const notifyToggle = document.getElementById("notifyToggle");
+const ONE_SIGNAL_APP_ID = "aba73ce3-fe72-4e33-a9c2-fc1a76ca7e7a";
 
+// Helper: التحقق من iOS و PWA
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+// تهيئة OneSignal
+window.OneSignal = window.OneSignal || [];
+OneSignal.push(function() {
+  OneSignal.init({
+    appId: ONE_SIGNAL_APP_ID,
+    notifyButton: { enable: true },
+    allowLocalhostAsSecureOrigin: true,
+  });
+});
+
+// دالة لتحديث Toggle حسب حالة الاشتراك الحقيقية
 async function updateToggle() {
+  if(isIOS && isStandalone) {
+    // iOS PWA لا تدعم الإشعارات
+    notifyToggle.checked = false;
+    notifyToggle.disabled = true;
+    return;
+  }
+
   try {
     const subscription = await OneSignal.User.pushSubscription.get();
     notifyToggle.checked = subscription?.optedIn || false;
-  } catch(e) {
+
+    // إظهار زر OneSignal فقط لو مش مشترك
+    const notifyButton = document.querySelector(".OneSignal-prompt");
+    if(notifyButton){
+      notifyButton.style.display = subscription?.optedIn ? "none" : "block";
+    }
+  } catch(e){
     console.log("OneSignal sync error:", e);
     notifyToggle.checked = false;
   }
 }
 
-// أول ما الصفحة تفتح
-window.addEventListener("load", async () => {
-  await updateToggle();
+// التعامل مع Toggle
+notifyToggle.addEventListener("change", async function() {
+  if(isIOS && isStandalone) return; // iOS PWA غير مدعومة
 
-  // كشف iOS PWA (غير مدعوم)
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  if(isIOS && isStandalone){
-    alert("⚠️ إشعارات PWA غير مدعومة على iOS. افتح الموقع في Safari لإضافة إشعارات.");
-  }
-});
-
-// التعامل مع toggle
-notifyToggle.addEventListener("change", async function(){
   if(notifyToggle.checked){
     try {
+      // طلب الإذن للإشعارات
       await OneSignal.Slidedown.promptPush();
     } catch(e){
       console.log("طلب الإذن فشل:", e);
@@ -482,6 +502,7 @@ notifyToggle.addEventListener("change", async function(){
     }
   } else {
     try {
+      // إلغاء الاشتراك
       await OneSignal.User.pushSubscription.optOut();
     } catch(e){
       console.log("إلغاء الاشتراك فشل:", e);
@@ -489,6 +510,18 @@ notifyToggle.addEventListener("change", async function(){
   }
   await updateToggle();
 });
+
+// أول ما الصفحة تفتح
+window.addEventListener("load", async () => {
+  await updateToggle();
+
+  if(isIOS && isStandalone){
+    console.log("⚠️ إشعارات PWA غير مدعومة على iOS. استخدم Safari لإضافة إشعارات.");
+  }
+});
+
+// تحديث Toggle دوري لو حصل تغييرات خارجية
+setInterval(updateToggle, 5000);
 </script>
 
 
@@ -522,6 +555,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
