@@ -449,9 +449,10 @@ OneSignalDeferred.push(async function(OneSignal) {
   const notifyToggle = document.getElementById("notifyToggle");
   if (!notifyToggle) return;
 
-  // دالة مزامنة التوجل مع حالة الاشتراك
+  // دالة مزامنة التوجل مع حالة الاشتراك الحقيقية
   async function syncToggle() {
     try {
+      // جلب حالة الاشتراك الفعلية من OneSignal
       const subscription = await OneSignal.User.PushSubscription.get();
       notifyToggle.checked = subscription?.optedIn || false;
     } catch(e) {
@@ -463,27 +464,26 @@ OneSignalDeferred.push(async function(OneSignal) {
   // أول ما الصفحة تعمل init، حدث التوجل
   await syncToggle();
 
-  // لما المستخدم يضغط على toggle
+  // عند تغيير المستخدم للتوجل
   notifyToggle.addEventListener("change", async function () {
-
     if (notifyToggle.checked) {
       try {
-        // طلب الإذن بشكل صحيح
+        // طلب الإذن بشكل رسمي عبر Slidedown
         await OneSignal.Slidedown.promptPush();
       } catch(e) {
-        console.log("Permission error:", e);
+        console.log("Permission request failed:", e);
         notifyToggle.checked = false;
       }
     } else {
-      // إلغاء الاشتراك
       try {
+        // إلغاء الاشتراك
         await OneSignal.User.PushSubscription.optOut();
       } catch(e) {
-        console.log("OptOut error:", e);
+        console.log("OptOut failed:", e);
       }
     }
 
-    // حدث التوجل بعد كل عملية
+    // بعد أي عملية، نحدث التوجل ليعكس الحالة الحقيقية
     await syncToggle();
   });
 
@@ -519,6 +519,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
