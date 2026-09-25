@@ -96,13 +96,6 @@ a{
   font-size:1.2em;
 }
 
-.float{
-  position:fixed;
-  font-size:1.6em;
-  pointer-events:none;
-  opacity:.8;
-}
-
 @media(max-width:480px){
   h2{font-size:1.8em}
   .card strong{font-size:1.15em}
@@ -361,32 +354,7 @@ function shareDua() {
 <a href="index.html">العودة للرئيسية</a>
 </div>
 
-<script>
-const icons=["🌙","🏵️","🏵️","🌙","🏵️"];
-const items=[];
 
-icons.forEach(icon=>{
-  const el=document.createElement("div");
-  el.className="float";
-  el.textContent=icon;
-  el.x=Math.random()*window.innerWidth;
-  el.y=Math.random()*window.innerHeight;
-  el.vx=(Math.random()*2-1)*0.7;
-  el.vy=(Math.random()*2-1)*0.7;
-  document.body.appendChild(el);
-  items.push(el);
-});
-
-setInterval(()=>{
-  items.forEach(el=>{
-    el.x+=el.vx;
-    el.y+=el.vy;
-    if(el.x<0||el.x>window.innerWidth-30) el.vx*=-1;
-    if(el.y<0||el.y>window.innerHeight-30) el.vy*=-1;
-    el.style.left=el.x+"px";
-    el.style.top=el.y+"px";
-  });
-},25);
 </script>
 
 <script src="pullRefresh.js"></script>
